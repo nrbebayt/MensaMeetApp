@@ -29,7 +29,8 @@ class _HomepageState extends State<Homepage>{
 
 
   Future _logout() async{
-    FirebaseAuth.instance.signOut();
+    return FirebaseAuth.instance.currentUser!.delete();
+    //FirebaseAuth.instance.signOut();
   }
 
   @override

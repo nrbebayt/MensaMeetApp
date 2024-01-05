@@ -11,6 +11,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  bool isClicked = false;
 
   AuthenticationService authenticationService = AuthenticationService();
 
@@ -28,6 +29,8 @@ class _LoginState extends State<Login> {
           child: Text('Login Without Credentials'),
           color: Colors.deepOrangeAccent,
           onPressed: () async {
+            if(isClicked) return;
+            isClicked = true;
             dynamic authenticationAnswer = await authenticationService.signInWithoutCredentials();
             if(authenticationAnswer == null){
               print('login error. returned null');
@@ -38,6 +41,7 @@ class _LoginState extends State<Login> {
               Navigator.pop(context);
               Navigator.push(context, MaterialPageRoute(builder: (context)=> AuthHomeWrapper()));
             }
+            isClicked = false;
           },
         ),
       )
