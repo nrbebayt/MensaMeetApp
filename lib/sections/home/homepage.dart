@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class Home extends StatefulWidget{
-  const Home({Key? key}) : super(key: key);
+class Homepage extends StatefulWidget{
+  const Homepage({Key? key}) : super(key: key);
 
   @override
-  _HomeState createState() =>_HomeState();
+  _HomepageState createState() =>_HomepageState();
 }
 
-class _HomeState extends State<Home>{
+class _HomepageState extends State<Homepage>{
   DateTime _dateTime = DateTime.now();
 
   void _showDatePicker(){
