@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mensa_meet_app/sections/auth_home_wrapper.dart';
 
 class Homepage extends StatefulWidget{
   const Homepage({Key? key}) : super(key: key);
@@ -23,9 +26,27 @@ class _HomepageState extends State<Homepage>{
     });
   }
 
+  Future _logout() async{
+    FirebaseAuth.instance.signOut();
+  }
+
   @override
   Widget build(BuildContext context){
     return Scaffold(
+        appBar: AppBar(
+          title: Text('Home'),
+          backgroundColor: Colors.deepOrangeAccent,
+          actions: <Widget>[
+            TextButton.icon(
+                onPressed:() async{
+                  await _logout();
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> AuthHomeWrapper()));
+                },
+                icon: Icon(Icons.account_box_rounded),
+                label: Text('Logout')),
+          ],
+        ),
         body: Center(
             child: Column(
               //display chosen date

@@ -13,7 +13,6 @@ class AuthenticationService{
       return null;
     }
   }
-//sign in anonymouslyr
-// sign in email and pw
-//sign out
+
+// todo sign in with email and pw
 }

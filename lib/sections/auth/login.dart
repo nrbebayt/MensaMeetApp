@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mensa_meet_app/sections/auth_home_wrapper.dart';
 import 'package:mensa_meet_app/sections/home//homepage.dart';
 import 'package:mensa_meet_app/service/authentication_service.dart';
 
@@ -34,6 +35,8 @@ class _LoginState extends State<Login> {
             else{
               print('anonymous login successful');
               print(authenticationAnswer);
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> AuthHomeWrapper()));
             }
           },
         ),
