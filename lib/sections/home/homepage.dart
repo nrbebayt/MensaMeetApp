@@ -26,16 +26,20 @@ class _HomepageState extends State<Homepage>{
     });
   }
 
+
+
   Future _logout() async{
     FirebaseAuth.instance.signOut();
   }
 
   @override
+
+  TimeOfDay selectedTime = TimeOfDay.now();
   Widget build(BuildContext context){
     return Scaffold(
         appBar: AppBar(
           title: Text('Home'),
-          backgroundColor: Colors.deepOrangeAccent,
+          backgroundColor: Colors.greenAccent,
           actions: <Widget>[
             TextButton.icon(
                 onPressed:() async{
@@ -54,12 +58,46 @@ class _HomepageState extends State<Homepage>{
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(_dateTime.toString(), style: TextStyle(fontSize: 25)),
+
+                Text("${selectedTime.hour.toString().padLeft(2,'0')}:${selectedTime.minute.toString().padLeft(2,'0')}",
+                    style: TextStyle(fontSize: 16)),
                 MaterialButton(
                   onPressed: _showDatePicker,
-                  color: Colors.deepOrangeAccent,
+                  color: Colors.greenAccent,
                   child: const Padding(
                     padding: EdgeInsets.all(20.0),
                     child: Text('Choose Date',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20
+                        )
+                    ),
+                  ),
+                ),
+                MaterialButton(
+                  onPressed: () async{
+                    final TimeOfDay? timeOfDay = await showTimePicker(
+                      context: context,
+                      initialTime: selectedTime,
+                      initialEntryMode: TimePickerEntryMode.input,
+                      builder: (BuildContext context, Widget? child) {
+                        return MediaQuery(
+                          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+                          child: child!,
+                        );
+                      },
+                    );
+                    if(timeOfDay != null){
+                      setState(() {
+                        selectedTime = timeOfDay;
+                      });
+                    }
+
+                  },
+                  color: Colors.greenAccent,
+                  child: const Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: Text('Choose Time',
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 20
