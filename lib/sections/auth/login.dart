@@ -68,6 +68,9 @@ class _LoginState extends State<Login> {
                 ),
                 onPressed: () async {
                   //use mail and pw to login
+                  authenticationService.signInWithoutCredentials();
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> AuthHomeWrapper()));
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,

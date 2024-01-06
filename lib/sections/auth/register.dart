@@ -80,12 +80,15 @@ class _RegisterState extends State<Register> {
                     onPressed: () async {
                       if(formStateKey.currentState!.validate()){
                         String uid = await authenticationService.registerWithCredentials(email, password);
-                        if(uid == ''){
-                          setState(() {
+                        setState(() {
+                          if(uid == '') {
                             errorMessage = 'E-Mail or password was not valid';
-                          });
-                        }
-                        else errorMessage = 'uid';
+                          }
+                          else {
+                            Navigator.pop(context);
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=> AuthHomeWrapper()));
+                          }
+                        });
                       }
                     },
                     style: ElevatedButton.styleFrom(
