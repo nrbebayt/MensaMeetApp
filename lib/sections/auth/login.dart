@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mensa_meet_app/sections/auth_home_wrapper.dart';
 import 'package:mensa_meet_app/sections/home//homepage.dart';
 import 'package:mensa_meet_app/sections/auth/authentication_service.dart';
+import 'package:mensa_meet_app/sections/home/home.dart';
 
 class Login extends StatefulWidget {
   final Function changeLoginStatus;
@@ -67,6 +68,22 @@ class _LoginState extends State<Login> {
                 ),
                 onPressed: () async {
                   //use mail and pw to login
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(7),
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                child: Text(
+                    'Go to Screen without Outh', style: TextStyle(color: Colors.white)
+                ),
+                onPressed: () async {
+                  authenticationService.signInWithoutCredentials();
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> Home()));
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,

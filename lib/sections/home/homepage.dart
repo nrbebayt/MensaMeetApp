@@ -40,7 +40,7 @@ class _HomepageState extends State<Homepage>{
     return Scaffold(
         appBar: AppBar(
           title: Text('Home'),
-          backgroundColor: Colors.greenAccent,
+          backgroundColor: Colors.amber,
           actions: <Widget>[
             TextButton.icon(
                 onPressed:() async{
@@ -64,7 +64,7 @@ class _HomepageState extends State<Homepage>{
                     style: TextStyle(fontSize: 16)),
                 MaterialButton(
                   onPressed: _showDatePicker,
-                  color: Colors.greenAccent,
+                  color: Colors.amber,
                   child: const Padding(
                     padding: EdgeInsets.all(20.0),
                     child: Text('Choose Date',
@@ -95,7 +95,7 @@ class _HomepageState extends State<Homepage>{
                     }
 
                   },
-                  color: Colors.greenAccent,
+                  color: Colors.amber,
                   child: const Padding(
                     padding: EdgeInsets.all(20.0),
                     child: Text('Choose Time',
