@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "511369155666",
-    "project_id": "mensameetapp",
-    "storage_bucket": "mensameetapp.appspot.com"
+    "project_number": "133861736811",
+    "project_id": "mensameetdatabase",
+    "storage_bucket": "mensameetdatabase.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:511369155666:android:c3f6a1bd2ce2b7903cfb8b",
+        "mobilesdk_app_id": "1:133861736811:android:469e000a5609d68f9c4c2e",
         "android_client_info": {
           "package_name": "com.example.mensa_meet_app"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAdBRwbb_GMF3MLm3xQbuyQj-NH1mGqZQ8"
+          "current_key": "AIzaSyDB5BDzR8MZV2LSDwUHYpXmtyAgUTgHf9E"
         }
       ],
       "services": {

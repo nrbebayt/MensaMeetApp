@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mensa_meet_app/sections/auth/login.dart';
+import 'package:mensa_meet_app/sections/auth/register.dart';
+
+enum LoginStatus{
+  atRegisterPage,
+  atLoginPage
+}
 
 class Authentication extends StatefulWidget {
   const Authentication({super.key});
@@ -9,11 +15,31 @@ class Authentication extends StatefulWidget {
 }
 
 class _AuthenticationState extends State<Authentication> {
+
+  LoginStatus status = LoginStatus.atLoginPage;
+
+  void switchBetweenLoginAndRegister(){
+    setState(() {
+      if(status == LoginStatus.atRegisterPage) {
+        status = LoginStatus.atLoginPage;
+      }
+      else if(status == LoginStatus.atLoginPage) {
+        status = LoginStatus.atRegisterPage;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Login(),
-    );
+    /*return Container(
+      child: Register(),
+    );*/
+    if(status == LoginStatus.atRegisterPage){
+      return Register(changeLoginStatus: switchBetweenLoginAndRegister);
+    }
+    else {
+      return Login(changeLoginStatus: switchBetweenLoginAndRegister);
+    }
   }
 }
 

@@ -1,0 +1,129 @@
+import 'package:flutter/material.dart';
+import 'package:mensa_meet_app/sections/auth/authentication.dart';
+import 'package:mensa_meet_app/sections/auth_home_wrapper.dart';
+import 'package:mensa_meet_app/sections/home/homepage.dart';
+import 'package:mensa_meet_app/sections/auth/authentication_service.dart';
+
+class Register extends StatefulWidget {
+  final Function changeLoginStatus;
+  Register({required this.changeLoginStatus});
+
+  //const Register({super.key});
+
+  @override
+  State<Register> createState() => _RegisterState();
+}
+
+class _RegisterState extends State<Register> {
+
+  final formStateKey = GlobalKey<FormState>();
+  bool isClicked = false;
+
+  AuthenticationService authenticationService = AuthenticationService();
+
+  String email = '';
+  String password = '';
+  String errorMessage = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      //backgroundColor: Colors.deepOrangeAccent,
+        appBar: AppBar(
+          backgroundColor: Colors.deepOrangeAccent,
+          title: Text('Register Page'),
+          actions: <Widget>[
+            TextButton.icon(
+                onPressed:() async{
+                  widget.changeLoginStatus();
+                },
+                icon: Icon(Icons.account_box_rounded),
+                label: Text('Login')),
+          ],
+        ),
+        body: Container(
+          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
+          child: Form(
+              key: formStateKey,
+              child: Column(
+                children: <Widget>[
+                  SizedBox(height:30),
+                  TextFormField(
+                    validator: (value){
+                      if(value!.isEmpty) return 'Enter E-Mail adress';
+                    },
+                    onChanged: (value) { //onChanged runs code inside curly brackets everytime we change something
+                      setState(() {
+                        setState(() {
+                          email = value;
+                        });
+                      });
+                    },
+                  ),
+                  SizedBox(height:30),
+                  TextFormField(
+                    validator: (value){
+                      if(password!.length < 4) return 'Enter a password with at least 4 characters';
+                    },
+                    onChanged: (value) {
+                      setState(() {
+                        password = value;
+                      });
+                    },
+                    obscureText: true,
+                  ),
+                  SizedBox(height:30),
+                  ElevatedButton(
+                    child: Text(
+                        'Register', style: TextStyle(color: Colors.white)
+                    ),
+                    onPressed: () async {
+                      if(formStateKey.currentState!.validate()){
+                        String uid = await authenticationService.registerWithCredentials(email, password);
+                        if(uid == ''){
+                          setState(() {
+                            errorMessage = 'E-Mail or password was not valid';
+                          });
+                        }
+                        else errorMessage = 'uid';
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7),
+                      ),
+                    ),
+
+                  ),
+                  SizedBox(height: 30),
+                  Text(errorMessage, style: TextStyle(color: Colors.red)),
+                ],
+              )
+          ),
+        )
+    );
+  }
+}
+
+/*
+child: MaterialButton(
+          child: Text('Register Without Credentials'),
+          color: Colors.deepOrangeAccent,
+          onPressed: () async {
+            if(isClicked) return;
+            isClicked = true;
+            dynamic authenticationAnswer = await authenticationService.signInWithoutCredentials();
+            if(authenticationAnswer == null){
+              print('Register error. returned null');
+            }
+            else{
+              print('anonymous Register successful');
+              print(authenticationAnswer);
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> AuthHomeWrapper()));
+            }
+            isClicked = false;
+          },
+        ),
+ */

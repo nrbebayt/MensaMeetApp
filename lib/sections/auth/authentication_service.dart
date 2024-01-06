@@ -14,5 +14,11 @@ class AuthenticationService{
     }
   }
 
+  Future registerWithCredentials(String email, String password) async {
+    UserCredential userCredential = await authenticator.createUserWithEmailAndPassword(email: email, password: password);
+    User? user = userCredential.user;
+    return user?.uid;
+  }
+
 // todo sign in with email and pw
 }

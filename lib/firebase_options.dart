@@ -44,37 +44,37 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDNd-ZR0a0f5Y--Ar0h9AOLWa5d3NrFv-E',
-    appId: '1:511369155666:web:acc31d74f1a901773cfb8b',
-    messagingSenderId: '511369155666',
-    projectId: 'mensameetapp',
-    authDomain: 'mensameetapp.firebaseapp.com',
-    storageBucket: 'mensameetapp.appspot.com',
+    apiKey: 'AIzaSyCfYc8shmH60BUSamhnHrtKN4E0qGqrnII',
+    appId: '1:133861736811:web:d4877c9e86b8ff749c4c2e',
+    messagingSenderId: '133861736811',
+    projectId: 'mensameetdatabase',
+    authDomain: 'mensameetdatabase.firebaseapp.com',
+    storageBucket: 'mensameetdatabase.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAdBRwbb_GMF3MLm3xQbuyQj-NH1mGqZQ8',
-    appId: '1:511369155666:android:c3f6a1bd2ce2b7903cfb8b',
-    messagingSenderId: '511369155666',
-    projectId: 'mensameetapp',
-    storageBucket: 'mensameetapp.appspot.com',
+    apiKey: 'AIzaSyDB5BDzR8MZV2LSDwUHYpXmtyAgUTgHf9E',
+    appId: '1:133861736811:android:469e000a5609d68f9c4c2e',
+    messagingSenderId: '133861736811',
+    projectId: 'mensameetdatabase',
+    storageBucket: 'mensameetdatabase.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCNoBiC1cExZvehGJRF9ugWU9Eu2jQAiw0',
-    appId: '1:511369155666:ios:eaf7a3fe9fba3e153cfb8b',
-    messagingSenderId: '511369155666',
-    projectId: 'mensameetapp',
-    storageBucket: 'mensameetapp.appspot.com',
+    apiKey: 'AIzaSyDRFTEOZPfUoUJCvvh6SdUmRZ0UQlE2Xx8',
+    appId: '1:133861736811:ios:d6f11ac2ca4e68f59c4c2e',
+    messagingSenderId: '133861736811',
+    projectId: 'mensameetdatabase',
+    storageBucket: 'mensameetdatabase.appspot.com',
     iosBundleId: 'com.example.mensaMeetApp',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyCNoBiC1cExZvehGJRF9ugWU9Eu2jQAiw0',
-    appId: '1:511369155666:ios:0989660b039fd4db3cfb8b',
-    messagingSenderId: '511369155666',
-    projectId: 'mensameetapp',
-    storageBucket: 'mensameetapp.appspot.com',
+    apiKey: 'AIzaSyDRFTEOZPfUoUJCvvh6SdUmRZ0UQlE2Xx8',
+    appId: '1:133861736811:ios:267772af3ebbc8e59c4c2e',
+    messagingSenderId: '133861736811',
+    projectId: 'mensameetdatabase',
+    storageBucket: 'mensameetdatabase.appspot.com',
     iosBundleId: 'com.example.mensaMeetApp.RunnerTests',
   );
 }

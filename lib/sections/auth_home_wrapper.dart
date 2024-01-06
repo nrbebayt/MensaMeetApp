@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mensa_meet_app/sections/home//homepage.dart';
 import 'package:mensa_meet_app/sections/auth/authentication.dart';
 
-import '../service/authentication_service.dart';
+import 'auth/authentication_service.dart';
 
 class AuthHomeWrapper extends StatelessWidget {
   const AuthHomeWrapper({super.key});

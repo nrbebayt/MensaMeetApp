@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:mensa_meet_app/sections/auth_home_wrapper.dart';
 import 'package:mensa_meet_app/sections/home//homepage.dart';
-import 'package:mensa_meet_app/service/authentication_service.dart';
+import 'package:mensa_meet_app/sections/auth/authentication_service.dart';
 
 class Login extends StatefulWidget {
-  const Login({super.key});
+  final Function changeLoginStatus;
+  Login({required this.changeLoginStatus});
+
+  //const Login({super.key});
 
   @override
   State<Login> createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
+
   bool isClicked = false;
 
   AuthenticationService authenticationService = AuthenticationService();
+
+  String mail = '';
+  String password = '';
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +29,62 @@ class _LoginState extends State<Login> {
       appBar: AppBar(
         backgroundColor: Colors.deepOrangeAccent,
         title: Text('Login Page'),
+        actions: <Widget>[
+          TextButton.icon(
+              onPressed:() async{
+                widget.changeLoginStatus();
+              },
+              icon: Icon(Icons.account_box_rounded),
+              label: Text('Register')),
+        ],
       ),
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
-        child: MaterialButton(
+        child: Form(
+          child: Column(
+            children: <Widget>[
+              SizedBox(height:30),
+              TextFormField(
+                onChanged: (value) { //onChanged runs code inside curly brackets everytime we change something
+                  setState(() {
+                    mail = value;
+                  });
+                },
+              ),
+              SizedBox(height:30),
+              TextFormField(
+                onChanged: (value) {
+                  setState(() {
+                    password = value;
+                  });
+                },
+                obscureText: true,
+              ),
+              SizedBox(height:30),
+              ElevatedButton(
+                child: Text(
+                    'Login', style: TextStyle(color: Colors.white)
+                ),
+                onPressed: () async {
+                  //use mail and pw to login
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(7),
+                  ),
+                ),
+              )
+            ],
+          )
+        ),
+      )
+    );
+  }
+}
+
+/*
+child: MaterialButton(
           child: Text('Login Without Credentials'),
           color: Colors.deepOrangeAccent,
           onPressed: () async {
@@ -44,7 +103,4 @@ class _LoginState extends State<Login> {
             isClicked = false;
           },
         ),
-      )
-    );
-  }
-}
+ */
