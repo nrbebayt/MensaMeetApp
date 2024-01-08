@@ -40,6 +40,7 @@ dependencies:
   cloud_firestore: ^4.14.0
   hexcolor: ^3.0.1
   flutter_svg: ^2.0.9
+  url_launcher: ^6.2.2
 
 dev_dependencies:
   flutter_test:
@@ -65,12 +66,18 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-     - assets/Logo.png
-     - assets/Logo.svg
-     - assets/Settings.svg
+     - assets/logo.png
+     - assets/logo.svg
+     - assets/settings.svg
      - assets/Images/bottrop.png
      - assets/Images/duisburg.png
      - assets/Images/muelheim.png
+     - assets/Images/teaser1.jpg
+     - assets/Images/teaser2.jpg
+     - assets/Images/teaser3.jpg
+     - assets/Images/speiseplan1.png
+     - assets/Images/speiseplan2.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
