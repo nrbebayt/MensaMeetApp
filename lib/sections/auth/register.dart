@@ -16,7 +16,7 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
 
-  final formStateKey = GlobalKey<FormState>();
+  GlobalKey<FormState> formStateKey = GlobalKey<FormState>();
   bool isClicked = false;
 
   AuthenticationService authenticationService = AuthenticationService();
@@ -63,7 +63,7 @@ class _RegisterState extends State<Register> {
                   SizedBox(height:30),
                   TextFormField(
                     validator: (value){
-                      if(password!.length < 4) return 'Enter a password with at least 4 characters';
+                      if(password!.length < 6) return 'Enter a password with at least 6 characters';
                     },
                     onChanged: (value) {
                       setState(() {

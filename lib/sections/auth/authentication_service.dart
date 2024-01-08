@@ -14,6 +14,18 @@ class AuthenticationService{
     }
   }
 
+  Future loginWithCredentials(String email, String password) async {
+    try {
+      UserCredential userCredential = await authenticator.signInWithEmailAndPassword(email: email, password: password);
+      User? user = userCredential.user;
+      return user?.uid;
+    }
+    catch(e){
+      print(e.toString());
+    }
+    return '';
+  }
+
   Future registerWithCredentials(String email, String password) async {
     try {
       UserCredential userCredential = await authenticator.createUserWithEmailAndPassword(email: email, password: password);

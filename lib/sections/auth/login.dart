@@ -15,6 +15,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  GlobalKey<FormState> formStateKey = GlobalKey<FormState>();
 
   bool isClicked = false;
 
@@ -22,84 +23,99 @@ class _LoginState extends State<Login> {
 
   String mail = '';
   String password = '';
+  String errorMessage = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //backgroundColor: Colors.deepOrangeAccent,
-      appBar: AppBar(
-        backgroundColor: Colors.deepOrangeAccent,
-        title: Text('Login Page'),
-        actions: <Widget>[
-          TextButton.icon(
-              onPressed:() async{
-                widget.changeLoginStatus();
-              },
-              icon: Icon(Icons.account_box_rounded),
-              label: Text('Register')),
-        ],
-      ),
-      body: Container(
-        padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
-        child: Form(
-          child: Column(
-            children: <Widget>[
-              SizedBox(height:30),
-              TextFormField(
-                onChanged: (value) { //onChanged runs code inside curly brackets everytime we change something
-                  setState(() {
-                    mail = value;
-                  });
-                },
-              ),
-              SizedBox(height:30),
-              TextFormField(
-                onChanged: (value) {
-                  setState(() {
-                    password = value;
-                  });
-                },
-                obscureText: true,
-              ),
-              SizedBox(height:30),
-              ElevatedButton(
-                child: Text(
-                    'Login', style: TextStyle(color: Colors.white)
-                ),
+        //backgroundColor: Colors.deepOrangeAccent,
+        appBar: AppBar(
+          backgroundColor: Colors.deepOrangeAccent,
+          title: Text('Login Page'),
+          actions: <Widget>[
+            TextButton.icon(
                 onPressed: () async {
-                  //use mail and pw to login
-                  authenticationService.signInWithoutCredentials();
-                  Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=> AuthHomeWrapper()));
+                  widget.changeLoginStatus();
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(7),
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                child: Text(
-                    'Go to Screen without Outh', style: TextStyle(color: Colors.white)
-                ),
-                onPressed: () async {
-                  authenticationService.signInWithoutCredentials();
-                  Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=> Home()));
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(7),
-                  ),
-                ),
-              )
-            ],
-          )
+                icon: Icon(Icons.account_box_rounded),
+                label: Text('Register')),
+          ],
         ),
-      )
-    );
+        body: Container(
+          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
+          child: Form(
+              key: formStateKey,
+              child: Column(
+                children: <Widget>[
+                  SizedBox(height: 30),
+                  TextFormField(
+                    validator: (value){
+                      if(value!.isEmpty) return 'Enter E-Mail adress';
+                    },
+                    onChanged: (value) {
+                      //onChanged runs code inside curly brackets everytime we change something
+                      setState(() {
+                        mail = value;
+                      });
+                    },
+                  ),
+                  SizedBox(height: 30),
+                  TextFormField(
+                    validator: (value){
+                      if(password!.length < 6) return 'Enter a password with at least 6 characters';
+                    },
+                    onChanged: (value) {
+                      setState(() {
+                        password = value;
+                      });
+                    },
+                    obscureText: true,
+                  ),
+                  SizedBox(height: 30),
+                  ElevatedButton(
+                    child: Text('Login', style: TextStyle(color: Colors.white)),
+                    onPressed: () async {
+                      if(formStateKey.currentState!.validate()){
+                        String uid = await authenticationService.loginWithCredentials(mail, password);
+                        setState(() {
+                          if(uid == '') {
+                            errorMessage = 'E-Mail or password was not valid';
+                          }
+                          else {
+                            Navigator.pop(context);
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=> AuthHomeWrapper()));
+                          }
+                        });
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7),
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    child: Text('Go to Screen without Outh',
+                        style: TextStyle(color: Colors.white)),
+                    onPressed: () async {
+                      authenticationService.signInWithoutCredentials();
+                      Navigator.pop(context);
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Home()));
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  Text(errorMessage, style: TextStyle(color: Colors.red)),
+                ],
+              )),
+        ));
   }
 }
 
