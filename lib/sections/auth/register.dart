@@ -49,6 +49,7 @@ class _RegisterState extends State<Register> {
                 children: <Widget>[
                   SizedBox(height:30),
                   TextFormField(
+                    decoration: InputDecoration(hintText: 'E-Mail'),
                     validator: (value){
                       if(value!.isEmpty) return 'Enter E-Mail adress';
                     },
@@ -62,6 +63,7 @@ class _RegisterState extends State<Register> {
                   ),
                   SizedBox(height:30),
                   TextFormField(
+                    decoration: InputDecoration(hintText: 'Passwort'),
                     validator: (value){
                       if(password!.length < 6) return 'Enter a password with at least 6 characters';
                     },

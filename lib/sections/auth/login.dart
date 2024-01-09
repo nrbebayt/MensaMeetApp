@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mensa_meet_app/sections/auth_home_wrapper.dart';
 import 'package:mensa_meet_app/sections/home//homepage.dart';
 import 'package:mensa_meet_app/sections/auth/authentication_service.dart';
 import 'package:mensa_meet_app/sections/home/home.dart';
+
+import 'package:mensa_meet_app/date_database.dart';
 
 class Login extends StatefulWidget {
   final Function changeLoginStatus;
@@ -49,6 +52,7 @@ class _LoginState extends State<Login> {
                 children: <Widget>[
                   SizedBox(height: 30),
                   TextFormField(
+                    decoration: InputDecoration(hintText: 'E-Mail'),
                     validator: (value){
                       if(value!.isEmpty) return 'Enter E-Mail adress';
                     },
@@ -61,6 +65,7 @@ class _LoginState extends State<Login> {
                   ),
                   SizedBox(height: 30),
                   TextFormField(
+                    decoration: InputDecoration(hintText: 'Passwort'),
                     validator: (value){
                       if(password!.length < 6) return 'Enter a password with at least 6 characters';
                     },
@@ -81,9 +86,9 @@ class _LoginState extends State<Login> {
                           if(uid == '') {
                             errorMessage = 'E-Mail or password was not valid';
                           }
-                          else {
+                          else { 
                             Navigator.pop(context);
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=> AuthHomeWrapper()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=> Home()));
                           }
                         });
                       }
