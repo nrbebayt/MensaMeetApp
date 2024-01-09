@@ -61,7 +61,6 @@ class _HomepageState extends State<Homepage>{
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(_dateTime.toString(), style: TextStyle(fontSize: 25)),
-
                 Text("${selectedTime.hour.toString().padLeft(2,'0')}:${selectedTime.minute.toString().padLeft(2,'0')}",
                     style: TextStyle(fontSize: 16)),
                 MaterialButton(
@@ -91,25 +90,7 @@ class _HomepageState extends State<Homepage>{
                   ),
                 ),
                 MaterialButton(
-                  onPressed: () async{
-                    final TimeOfDay? timeOfDay = await showTimePicker(
-                      context: context,
-                      initialTime: selectedTime,
-                      initialEntryMode: TimePickerEntryMode.input,
-                      builder: (BuildContext context, Widget? child) {
-                        return MediaQuery(
-                          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-                          child: child!,
-                        );
-                      },
-                    );
-                    if(timeOfDay != null){
-                      setState(() {
-                        selectedTime = timeOfDay;
-                      });
-                    }
-
-                  },
+                  onPressed: _showDatePicker,
                   color: Colors.amber,
                   child: const Padding(
                     padding: EdgeInsets.all(20.0),

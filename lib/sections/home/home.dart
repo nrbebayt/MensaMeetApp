@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:hexcolor/hexcolor.dart';
+import 'package:mensa_meet_app/sections/home/homepage.dart';
+import 'package:mensa_meet_app/sections/sitzplan/sitzplan.dart';
 import 'package:mensa_meet_app/sections/supportClass/_Colors.dart';
 import 'package:mensa_meet_app/sections/supportClass/_Images.dart';
 import 'package:mensa_meet_app/sections/supportClass/urlHandler.dart';
@@ -31,11 +33,20 @@ class _HomeState extends State<Home> {
       title: appTitle,
       home: Scaffold(
         appBar: AppBar(
-          toolbarHeight: 100,
+          toolbarHeight: 130,
           backgroundColor: HexColor("F3EBDD"),
           title: Padding(
             padding: const EdgeInsets.only(top: 15, left: 15),
-            child: SvgPicture.asset(Images.logoSvg),
+            child: SvgPicture.asset(Images.logo_light),
+
+          ),
+          flexibleSpace: FlexibleSpaceBar(
+            background: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.asset(Images.appbar,
+                fit: BoxFit.fill,
+              ),
+            ),
           ),
         ),
         bottomNavigationBar: NavigationBar(
@@ -53,14 +64,11 @@ class _HomeState extends State<Home> {
               label: 'Home',
             ),
             NavigationDestination(
-              icon: Badge(child: Icon(Icons.fastfood)),
+              icon: Icon(Icons.fastfood),
               label: 'Speiseplan',
             ),
             NavigationDestination(
-              icon: Badge(
-                label: Text('2'),
-                child: Icon(Icons.no_accounts),
-              ),
+              icon: Icon(Icons.no_accounts),
               label: 'Meetups',
             ),
           ],
@@ -76,44 +84,78 @@ class _HomeState extends State<Home> {
               decoration: BoxDecoration(color: colorlib.backgroundColor),
               child: Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 25),
-                      child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Align(
-                              alignment: AlignmentDirectional(-1, 0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 5.0, bottom: 3.0),
-                                    child: Text('Bottrop',
-                                        textAlign: TextAlign.start),
-                                  ),
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(16),
-                                    child: Image.asset(
-                                      Images.bottrop,
-                                      width: 320,
-                                      height: 130,
-                                      fit: BoxFit.cover,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 25),
+                        child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Align(
+                                alignment: AlignmentDirectional(-1, 0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 5.0, bottom: 3.0),
+                                      child: Text('Bottrop',
+                                          textAlign: TextAlign.start),
                                     ),
-                                  ),
-                                ],
+                                    GestureDetector(
+                                      onTap: () async{
+                                        Navigator.pop(context);
+                                        Navigator.push(context, MaterialPageRoute(builder: (context)=> sitzplan()));
+                                      },
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(16),
+                                        child: Image.asset(
+                                          Images.bottrop,
+                                          width: 320,
+                                          height: 130,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
+                            ]),
+                      ),
+                      Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 25),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Column(
+                              mainAxisSize: MainAxisSize.max,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 8.0, bottom: 3.0),
+                                  child:
+                                      Text('Mülheim', textAlign: TextAlign.start),
+                                ),
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: Image.asset(
+                                    Images.muelheim,
+                                    width: 320,
+                                    height: 130,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ]),
-                    ),
-                    Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 25),
-                      child: Row(
+                          ],
+                        ),
+                      ),
+                      Row(
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           Column(
@@ -121,15 +163,15 @@ class _HomeState extends State<Home> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 8.0, bottom: 3.0),
+                                padding:
+                                    const EdgeInsets.only(left: 8.0, bottom: 3.0),
                                 child:
-                                    Text('Mülheim', textAlign: TextAlign.start),
+                                    Text('Duisburg', textAlign: TextAlign.start),
                               ),
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(16),
                                 child: Image.asset(
-                                  Images.muelheim,
+                                  Images.duisburg,
                                   width: 320,
                                   height: 130,
                                   fit: BoxFit.cover,
@@ -139,34 +181,8 @@ class _HomeState extends State<Home> {
                           ),
                         ],
                       ),
-                    ),
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Column(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 8.0, bottom: 3.0),
-                              child:
-                                  Text('Duisburg', textAlign: TextAlign.start),
-                            ),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(16),
-                              child: Image.asset(
-                                Images.duisburg,
-                                width: 320,
-                                height: 130,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

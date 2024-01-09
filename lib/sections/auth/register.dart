@@ -4,6 +4,7 @@ import 'package:mensa_meet_app/sections/auth_home_wrapper.dart';
 import 'package:mensa_meet_app/sections/home/homepage.dart';
 import 'package:mensa_meet_app/sections/auth/authentication_service.dart';
 
+
 class Register extends StatefulWidget {
   final Function changeLoginStatus;
   Register({required this.changeLoginStatus});
