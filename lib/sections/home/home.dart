@@ -1,6 +1,8 @@
+
 import 'package:flutter/material.dart';
 
 import 'package:hexcolor/hexcolor.dart';
+import 'package:mensa_meet_app/date_database.dart';
 import 'package:mensa_meet_app/sections/home/homepage.dart';
 import 'package:mensa_meet_app/sections/sitzplan/sitzplan.dart';
 import 'package:mensa_meet_app/sections/supportClass/_Colors.dart';
@@ -24,6 +26,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int currentPageIndex = 0;
+  List<MeetingData> listOfMeetings = <MeetingData>[];
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +53,15 @@ class _HomeState extends State<Home> {
           ),
         ),
         bottomNavigationBar: NavigationBar(
-          onDestinationSelected: (int index) {
+          onDestinationSelected: (int index) async {
+            if(index == 2) {
+              listOfMeetings = await MeetingDatabase().getListOfAllMeetings();
+            }
+            currentPageIndex = index;
+            print(listOfMeetings.length);
+
             setState(() {
-              currentPageIndex = index;
+
             });
           },
           indicatorColor: colorlib.red,
@@ -108,8 +117,8 @@ class _HomeState extends State<Home> {
                                     ),
                                     GestureDetector(
                                       onTap: () async{
-                                        Navigator.pop(context);
-                                        Navigator.push(context, MaterialPageRoute(builder: (context)=> sitzplan()));
+                                        //Navigator.pop(context);
+                                        Navigator.push(context, MaterialPageRoute(builder: (context)=> AuthHomeWrapper()));
                                       },
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(16),
@@ -595,18 +604,19 @@ class _HomeState extends State<Home> {
           ),
 
           /// Notifications page
-          const Padding(
+
+          Padding(
             padding: EdgeInsets.all(8.0),
             child: Column(
               children: <Widget>[
-                Card(
+                for(var item in listOfMeetings) Card(
                   child: ListTile(
                     leading: Icon(Icons.notifications_sharp),
-                    title: Text('Notification 1'),
+                    title: Text('${item.time}'),
                     subtitle: Text('This is a notification'),
                   ),
                 ),
-                Card(
+                const Card(
                   child: ListTile(
                     leading: Icon(Icons.notifications_sharp),
                     title: Text('Notification 2'),

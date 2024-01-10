@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:developer';
 
 class MeetingData {
   String date;
@@ -11,7 +12,7 @@ class MeetingData {
   MeetingData(this.date, this.time, this.campus, this.tableNumber, this.users);
 }
 
-class DateDatabase {
+class MeetingDatabase {
   //final String userid = '';
   //DateDatabase({required this.userid});
 
@@ -40,21 +41,29 @@ class DateDatabase {
   }
 
   Future<List<MeetingData>> getListOfAllMeetings() async {
+    List<String> users = <String>[];
     List<MeetingData> list = <MeetingData>[];
-    FirebaseFirestore.instance.collection('termine').get().then(
+    //list.add(MeetingData("date", "time", "campus", 1, users));
+    //print(list.length);
+
+    await FirebaseFirestore.instance.collection('termine').get().then(
       (value) {
-        value.docs.forEach(
-          (termin) {
-            list.add(MeetingData(
+        for (var termin in value.docs) {
+            var array = termin['nutzer'];
+            MeetingData meetingData = (MeetingData(
                 termin.get('date'),
                 termin.get('time'),
-                termin.get('field'),
+                termin.get('campus'),
                 termin.get('tisch'),
-                termin.get('nutzer')));
-          },
-        );
+                List<String>.from(array))
+            );
+            list.add(meetingData);
+            //print(list.elementAt(0).tableNumber);
+          }
       },
     );
+    //print(list);
+    //print(list.length);
     return list;
   }
 }
