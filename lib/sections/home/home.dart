@@ -1,11 +1,18 @@
-import 'package:flutter/material.dart';
+import 'dart:developer';
 
+import 'package:flutter/material.dart';
+import 'dart:developer';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mensa_meet_app/sections/home/homepage.dart';
 import 'package:mensa_meet_app/sections/sitzplan/sitzplan.dart';
 import 'package:mensa_meet_app/sections/supportClass/_Colors.dart';
 import 'package:mensa_meet_app/sections/supportClass/_Images.dart';
 import 'package:mensa_meet_app/sections/supportClass/urlHandler.dart';
+//TEST
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+
 
 //open URL
 import 'package:url_launcher/url_launcher.dart';
@@ -27,6 +34,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
    int currentPageIndex = 0;
    List<MeetingData> listOfMeetings = <MeetingData>[];
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -607,19 +616,14 @@ class _HomeState extends State<Home> {
           /// Notifications page
           Padding(
             padding: EdgeInsets.all(8.0),
+
             child: Column(
+
               children: <Widget>[
                 for(var item in listOfMeetings) Card(
                   child: ListTile(
                     leading: Icon(Icons.notifications_sharp),
-                    title: Text('${item.time}'),
-                    subtitle: Text('This is a notification'),
-                  ),
-                ),
-                const Card(
-                  child: ListTile(
-                    leading: Icon(Icons.notifications_sharp),
-                    title: Text('Notification 2'),
+                    title: Text('${item.uhrzeit}'),
                     subtitle: Text('This is a notification'),
                   ),
                 ),

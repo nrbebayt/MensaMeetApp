@@ -3,13 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:developer';
 
 class MeetingData {
-  String date;
-  String time;
   String campus;
-  int tableNumber;
-  List<String> users;
+  String datum;
+  String uhrzeit;
+  int tisch;
+  List<String> nutzer;
 
-  MeetingData(this.date, this.time, this.campus, this.tableNumber, this.users);
+
+
+  MeetingData( this.campus, this.datum, this.uhrzeit, this.tisch, this.nutzer);
 }
 
 class MeetingDatabase {
@@ -25,17 +27,17 @@ class MeetingDatabase {
 
   //MeetingData meetingData = MeetingData();
 
-  Future addMeetingToDatabase(String date, String time, String campus,
-      int tableNumber, String uid) async {
-    List<String> users = <String>[uid];
+  Future addMeetingToDatabase(String campus,String datum, String uhrzeit,
+      int tisch, String uid) async {
+    List<String> nutzer = <String>[uid];
 
     //sets a collection of data for the doc corresponding to the current user id
     return await collectionReference.add({
-      'date': date,
-      'time': time,
       'campus': campus,
-      'tisch': tableNumber,
-      'nutzer': users
+      'datum': datum,
+      'uhrzeit': uhrzeit,
+      'tisch': tisch,
+      'nutzer': nutzer
     });
     //campus, tisch, datum, uhrzeit, nutzer
   }
@@ -51,9 +53,9 @@ class MeetingDatabase {
         for (var termin in value.docs) {
             var array = termin['nutzer'];
             MeetingData meetingData = (MeetingData(
-                termin.get('date'),
-                termin.get('time'),
                 termin.get('campus'),
+                termin.get('datum'),
+                termin.get('uhrzeit'),
                 termin.get('tisch'),
                 List<String>.from(array))
             );

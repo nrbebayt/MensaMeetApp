@@ -1,4 +1,5 @@
 //Design
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 //Log
 import 'dart:developer';
@@ -8,8 +9,10 @@ import 'package:mensa_meet_app/sections/home/home.dart';
 import 'package:mensa_meet_app/sections/home/homepage.dart';
 import 'package:mensa_meet_app/sections/supportClass/_Colors.dart';
 import 'package:mensa_meet_app/sections/supportClass/_Images.dart';
-//DatePickerTimePicker with interval
 
+//FireBase
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 //open URL so we can open PDF's
 import 'package:mensa_meet_app/sections/supportClass/urlHandler.dart';
 //Format Date, Number etc.
@@ -29,13 +32,14 @@ class sitzplan extends StatefulWidget {
   State<sitzplan> createState() => _sitzplanState();
 }
 
+const campus = "Mensa Bottrop";
+var currentTable = 0;
+
 DateTime _dateTime = DateTime.now();
 TimeOfDay selectedTime = TimeOfDay.now();
 
 class _sitzplanState extends State<sitzplan> {
   int currentPageIndex = 0;
-
-
   DateTime dateTime = DateTime(2024,1,10,1,24);
 
 
@@ -57,8 +61,28 @@ class _sitzplanState extends State<sitzplan> {
       );
     },
   );
+  Future<void> addDataToFirebase(String campus, String date, String time, int table,String user) async {
+    try {
+      // Verbinden Sie sich mit Ihrer Firestore-Datenbank
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  Future pickDateTime() async{
+      // Fügen Sie Daten in eine Sammlung hinzu
+      await firestore.collection('termine').add({
+        'campus': campus,
+        'datum': date,
+        'uhrzeit': time,
+        'tisch': table,
+        'nutzer': user
+        // Weitere Felder nach Bedarf hinzufügen
+      });
+
+      print('Daten erfolgreich in Firebase geschrieben!');
+    } catch (e) {
+      print('Fehler beim Schreiben in Firebase: $e');
+    }
+  }
+
+  Future pickDateTime(int num) async{
     DateTime? date = await pickDate();
     if(date == null) return;
 
@@ -72,8 +96,13 @@ class _sitzplanState extends State<sitzplan> {
       time.hour,
       time.minute
     );
-    setState(() => this.dateTime = dateTime);
 
+    setState(()  {
+      this.dateTime = dateTime;
+      String date = "${dateTime.day.toString().padLeft(2,'0')}.${dateTime.month.toString().padLeft(2,'0')}.${dateTime.year}";
+      String time = "${dateTime.hour.toString().padLeft(2,'0')}:${dateTime.minute.toString().padLeft(2,'0')}";
+      addDataToFirebase(campus,date,time,num,"TestUser");
+    });
   }
 
 
@@ -169,7 +198,7 @@ class _sitzplanState extends State<sitzplan> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(bottom: 15),
-                        child:  Text("${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour}:${dateTime.minute}"),
+                        child:  Text("${dateTime.day.toString().padLeft(2,'0')}.${dateTime.month.toString().padLeft(2,'0')}.${dateTime.year} ${dateTime.hour.toString().padLeft(2,'0')}:${dateTime.minute.toString().padLeft(2,'0')}"),
                         ),
                     ],
                   ),
@@ -185,7 +214,10 @@ class _sitzplanState extends State<sitzplan> {
                       scrollDirection: Axis.vertical,
                       children: [
                         GestureDetector(
-                          onTap: pickDateTime,
+                          onTap: ()  {
+                          pickDateTime(1);
+
+                        },
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: SvgPicture.asset(Images.tisch1,
@@ -195,56 +227,88 @@ class _sitzplanState extends State<sitzplan> {
                             ),
                           ),
                         ),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: SvgPicture.asset(Images.tisch2,
-                            width: 300,
-                            height: 200,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: SvgPicture.asset(Images.tisch3,
-                            width: 300,
-                            height: 200,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: SvgPicture.asset(Images.tisch4,
-                            width: 300,
-                            height: 200,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: SvgPicture.asset(Images.tisch5,
-                            width: 300,
-                            height: 200,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: SvgPicture.asset(Images.tisch6,
-                            width: 300,
-                            height: 200,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: SvgPicture.asset(Images.tisch7,
-                            width: 300,
-                            height: 200,
-                            fit: BoxFit.contain,
+                        GestureDetector(
+                          onTap: () {
+                            pickDateTime(2);
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: SvgPicture.asset(Images.tisch2,
+                              width: 300,
+                              height: 200,
+                              fit: BoxFit.contain,
+                            ),
                           ),
                         ),
                         GestureDetector(
-                            onTap: null,
+                          onTap: () {
+                            pickDateTime(3);
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: SvgPicture.asset(Images.tisch3,
+                              width: 300,
+                              height: 200,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: (){
+                            pickDateTime(4);
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: SvgPicture.asset(Images.tisch4,
+                              width: 300,
+                              height: 200,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: (){
+                            pickDateTime(5);
+                          },
+                            child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: SvgPicture.asset(Images.tisch5,
+                              width: 300,
+                              height: 200,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: (){
+                            pickDateTime(6);
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: SvgPicture.asset(Images.tisch6,
+                              width: 300,
+                              height: 200,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: (){
+                            pickDateTime(7);
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: SvgPicture.asset(Images.tisch7,
+                              width: 300,
+                              height: 200,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: (){
+                            pickDateTime(8);
+                          },
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: SvgPicture.asset(Images.tisch8,
