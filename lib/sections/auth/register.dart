@@ -9,7 +9,6 @@ class Register extends StatefulWidget {
   final Function changeLoginStatus;
   Register({required this.changeLoginStatus});
 
-  //const Register({super.key});
 
   @override
   State<Register> createState() => _RegisterState();
@@ -29,7 +28,6 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //backgroundColor: Colors.deepOrangeAccent,
         appBar: AppBar(
           backgroundColor: Colors.deepOrangeAccent,
           title: Text('Register Page'),
@@ -111,25 +109,3 @@ class _RegisterState extends State<Register> {
     );
   }
 }
-
-/*
-child: MaterialButton(
-          child: Text('Register Without Credentials'),
-          color: Colors.deepOrangeAccent,
-          onPressed: () async {
-            if(isClicked) return;
-            isClicked = true;
-            dynamic authenticationAnswer = await authenticationService.signInWithoutCredentials();
-            if(authenticationAnswer == null){
-              print('Register error. returned null');
-            }
-            else{
-              print('anonymous Register successful');
-              print(authenticationAnswer);
-              Navigator.pop(context);
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> AuthHomeWrapper()));
-            }
-            isClicked = false;
-          },
-        ),
- */

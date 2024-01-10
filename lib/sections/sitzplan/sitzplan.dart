@@ -67,12 +67,14 @@ class _sitzplanState extends State<sitzplan> {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
 
       // Fügen Sie Daten in eine Sammlung hinzu
+      List<String> users = <String>[];
+      users.add(user);
       await firestore.collection('termine').add({
         'campus': campus,
         'datum': date,
         'uhrzeit': time,
         'tisch': table,
-        'nutzer': user
+        'nutzer': users
         // Weitere Felder nach Bedarf hinzufügen
       });
 
