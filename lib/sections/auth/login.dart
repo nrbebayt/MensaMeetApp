@@ -88,7 +88,8 @@ class _LoginState extends State<Login> {
                           }
                           else { 
                             Navigator.pop(context);
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=> Home()));
+
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=> Home(index: 0,)));
                           }
                         });
                       }
@@ -107,7 +108,7 @@ class _LoginState extends State<Login> {
                       authenticationService.signInWithoutCredentials();
                       Navigator.pop(context);
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Home()));
+                          MaterialPageRoute(builder: (context) => Home(index: 0)));
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,

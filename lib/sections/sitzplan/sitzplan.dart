@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'dart:developer';
 //Use Hexcode for Colors
 import 'package:hexcolor/hexcolor.dart';
+import 'package:mensa_meet_app/sections/home/home.dart';
 import 'package:mensa_meet_app/sections/home/homepage.dart';
 import 'package:mensa_meet_app/sections/supportClass/_Colors.dart';
 import 'package:mensa_meet_app/sections/supportClass/_Images.dart';
+//DatePickerTimePicker with interval
+
 //open URL so we can open PDF's
 import 'package:mensa_meet_app/sections/supportClass/urlHandler.dart';
 //Format Date, Number etc.
@@ -26,31 +29,60 @@ class sitzplan extends StatefulWidget {
   State<sitzplan> createState() => _sitzplanState();
 }
 
+DateTime _dateTime = DateTime.now();
+TimeOfDay selectedTime = TimeOfDay.now();
 
 class _sitzplanState extends State<sitzplan> {
   int currentPageIndex = 0;
 
-  DateTime _dateTime = DateTime.now();
 
-  void _showDatePicker(){
-    var test = [];
-    showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2024),
-      lastDate: DateTime(2025)
-    ).then((value){
-      setState(() {
-        _dateTime = value!;
-        log('$value');
-        test.add('$value');
-        log('$test');
-      });
-    });
+  DateTime dateTime = DateTime(2024,1,10,1,24);
+
+
+  Future<DateTime?> pickDate() => showDatePicker(
+    context: context,
+    initialDate: dateTime,
+    firstDate: DateTime(2000),
+    lastDate: DateTime(2025),
+  );
+
+  Future<TimeOfDay?> pickTime() => showTimePicker(
+    context: context,
+    initialTime: selectedTime,
+    initialEntryMode: TimePickerEntryMode.input,
+    builder: (BuildContext context, Widget? child) {
+      return MediaQuery(
+        data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+        child: child!,
+      );
+    },
+  );
+
+  Future pickDateTime() async{
+    DateTime? date = await pickDate();
+    if(date == null) return;
+
+    TimeOfDay? time = await pickTime();
+    if(time == null) return;
+
+    final dateTime = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      time.hour,
+      time.minute
+    );
+    setState(() => this.dateTime = dateTime);
+
   }
+
 
   @override
   Widget build(BuildContext context) {
+
+    final hours = dateTime.hour.toString().padLeft(2,'0');
+    final minutes = dateTime.minute.toString().padLeft(2,'0');
+
     const String appTitle = 'Flutter layout demo';
     return MaterialApp(
       theme: ThemeData(useMaterial3: true),
@@ -76,6 +108,8 @@ class _sitzplanState extends State<sitzplan> {
           onDestinationSelected: (int index) {
             setState(() {
               currentPageIndex = index;
+              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> Home(index: 2)));
             });
           },
           indicatorColor: colorlib.red,
@@ -135,7 +169,7 @@ class _sitzplanState extends State<sitzplan> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(bottom: 15),
-                        child:  Text(_dateTime.toString(), style: TextStyle(fontSize: 25)),
+                        child:  Text("${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour}:${dateTime.minute}"),
                         ),
                     ],
                   ),
@@ -150,12 +184,15 @@ class _sitzplanState extends State<sitzplan> {
                       ),
                       scrollDirection: Axis.vertical,
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: SvgPicture.asset(Images.tisch1,
-                            width: 300,
-                            height: 200,
-                            fit: BoxFit.contain,
+                        GestureDetector(
+                          onTap: pickDateTime,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: SvgPicture.asset(Images.tisch1,
+                              width: 300,
+                              height: 200,
+                              fit: BoxFit.contain,
+                            ),
                           ),
                         ),
                         ClipRRect(
@@ -207,7 +244,7 @@ class _sitzplanState extends State<sitzplan> {
                           ),
                         ),
                         GestureDetector(
-                            onTap: _showDatePicker,
+                            onTap: null,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: SvgPicture.asset(Images.tisch8,
