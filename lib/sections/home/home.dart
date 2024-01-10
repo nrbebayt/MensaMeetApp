@@ -13,6 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 //add SVG Support
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../date_database.dart';
 import '../auth_home_wrapper.dart';
 
 class Home extends StatefulWidget {
@@ -25,6 +26,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
    int currentPageIndex = 0;
+   List<MeetingData> listOfMeetings = <MeetingData>[];
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +54,15 @@ class _HomeState extends State<Home> {
         ),
         bottomNavigationBar: NavigationBar(
 
-          onDestinationSelected: (int index) {
+          onDestinationSelected: (int index) async {
+            if(index == 2) {
+              listOfMeetings = await MeetingDatabase().getListOfAllMeetings();
+            }
+            currentPageIndex = index;
+            print(listOfMeetings.length);
+
             setState(() {
-              currentPageIndex = index;
+
             });
           },
           indicatorColor: colorlib.red,
@@ -597,18 +605,18 @@ class _HomeState extends State<Home> {
           ),
 
           /// Notifications page
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(8.0),
             child: Column(
               children: <Widget>[
-                Card(
+                for(var item in listOfMeetings) Card(
                   child: ListTile(
                     leading: Icon(Icons.notifications_sharp),
-                    title: Text('Notification 1'),
+                    title: Text('${item.time}'),
                     subtitle: Text('This is a notification'),
                   ),
                 ),
-                Card(
+                const Card(
                   child: ListTile(
                     leading: Icon(Icons.notifications_sharp),
                     title: Text('Notification 2'),
