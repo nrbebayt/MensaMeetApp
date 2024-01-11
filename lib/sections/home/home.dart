@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:mensa_meet_app/sections/auth/authentication_service.dart';
 import 'package:mensa_meet_app/sections/home/homepage.dart';
 import 'package:mensa_meet_app/sections/sitzplan/sitzplan_bot.dart';
 import 'package:mensa_meet_app/sections/sitzplan/sitzplan_mul.dart';
@@ -81,6 +82,21 @@ class _HomeState extends State<Home> {
               ),
             ),
           ),
+          actions: <Widget>[
+            TextButton.icon(
+                onPressed:() async{
+                  await AuthenticationService().logout();
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const AuthHomeWrapper()));
+                },
+                style: TextButton.styleFrom(foregroundColor: Colors.white),
+                icon: const Icon(Icons.account_box_rounded),
+                label: const Text(
+                    'Logout',
+                    style: TextStyle(color: Colors.white)
+                )
+            ),
+          ],
         ),
         bottomNavigationBar: NavigationBar(
 

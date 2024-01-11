@@ -24,6 +24,7 @@ import 'package:url_launcher/url_launcher.dart';
 //add SVG Support
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../auth/authentication_service.dart';
 import '../auth_home_wrapper.dart';
 
 class sitzplan_bot extends StatefulWidget {
@@ -113,6 +114,21 @@ class _sitzplan_botState extends State<sitzplan_bot> {
               ),
             ),
           ),
+          actions: <Widget>[
+            TextButton.icon(
+                onPressed:() async{
+                  await AuthenticationService().logout();
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const AuthHomeWrapper()));
+                },
+                style: TextButton.styleFrom(foregroundColor: Colors.white),
+                icon: const Icon(Icons.account_box_rounded),
+                label: const Text(
+                    'Logout',
+                    style: TextStyle(color: Colors.white)
+                )
+            ),
+          ],
         ),
         bottomNavigationBar: NavigationBar(
           onDestinationSelected: (int index) {

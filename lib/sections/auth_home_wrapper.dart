@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mensa_meet_app/sections/home//homepage.dart';
 import 'package:mensa_meet_app/sections/auth/authentication.dart';
 import 'package:mensa_meet_app/sections/home/home.dart';
 
@@ -14,7 +13,7 @@ class AuthHomeWrapper extends StatelessWidget {
     // return either homepage or authentication (later on)
     AuthenticationService authenticationService = AuthenticationService();
     if (FirebaseAuth.instance.currentUser == null){
-      return Authentication();
+      return const Authentication();
     }
     else {
       return Home(index: 0);

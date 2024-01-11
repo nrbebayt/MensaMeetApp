@@ -1,10 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mensa_meet_app/sections/auth_home_wrapper.dart';
 
 
-import 'package:mensa_meet_app/date_database.dart';
 
 class Homepage extends StatefulWidget{
   const Homepage({Key? key}) : super(key: key);
@@ -39,20 +37,21 @@ class _HomepageState extends State<Homepage>{
   @override
 
   TimeOfDay selectedTime = TimeOfDay.now();
+  @override
   Widget build(BuildContext context){
     return Scaffold(
         appBar: AppBar(
-          title: Text('Home'),
+          title: const Text('Home'),
           backgroundColor: Colors.amber,
           actions: <Widget>[
             TextButton.icon(
                 onPressed:() async{
                   await _logout();
                   Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=> AuthHomeWrapper()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> const AuthHomeWrapper()));
                 },
-                icon: Icon(Icons.account_box_rounded),
-                label: Text('Logout')),
+                icon: const Icon(Icons.account_box_rounded),
+                label: const Text('Logout')),
           ],
         ),
         body: Center(
@@ -61,10 +60,10 @@ class _HomepageState extends State<Homepage>{
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text(_dateTime.toString(), style: TextStyle(fontSize: 25)),
+                Text(_dateTime.toString(), style: const TextStyle(fontSize: 25)),
 
                 Text("${selectedTime.hour.toString().padLeft(2,'0')}:${selectedTime.minute.toString().padLeft(2,'0')}",
-                    style: TextStyle(fontSize: 16)),
+                    style: const TextStyle(fontSize: 16)),
                 MaterialButton(
                   onPressed: _showDatePicker,
                   color: Colors.amber,
@@ -79,8 +78,6 @@ class _HomepageState extends State<Homepage>{
                   ),
                 ),
                 ElevatedButton(
-                  child: Text('Test set database data',
-                      style: TextStyle(color: Colors.white)),
                   onPressed: () async {
                     //await MeetingDatabase().addMeetingToDatabase("ein datum", "eine uhrzeit","Bottrop",1, FirebaseAuth.instance.currentUser!.uid);
                   },
@@ -90,6 +87,8 @@ class _HomepageState extends State<Homepage>{
                       borderRadius: BorderRadius.circular(7),
                     ),
                   ),
+                  child: const Text('Test set database data',
+                      style: TextStyle(color: Colors.white)),
                 ),
                 MaterialButton(
                   onPressed: () async{

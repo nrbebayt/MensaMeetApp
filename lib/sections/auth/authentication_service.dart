@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mensa_meet_app/date_database.dart';
 
 class AuthenticationService{
 
@@ -41,6 +40,10 @@ class AuthenticationService{
       print(e.toString());
     }
     return '';
+  }
+
+  Future logout() async{
+    FirebaseAuth.instance.signOut();
   }
 
 // todo sign in with email and pw

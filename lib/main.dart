@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mensa_meet_app/sections/auth_home_wrapper.dart';
-import 'sections/home//homepage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: AuthHomeWrapper(),
+      home: const AuthHomeWrapper(),
       theme: ThemeData(
         //primarySwatch: Colors.deepOrange,
         //brightness: Brightness.dark 
