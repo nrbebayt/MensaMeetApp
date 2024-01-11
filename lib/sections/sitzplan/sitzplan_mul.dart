@@ -107,8 +107,8 @@ class _sitzplan_mulState extends State<sitzplan_mul> {
           flexibleSpace: FlexibleSpaceBar(
             background: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.asset(Images.appbar,
-                fit: BoxFit.fill,
+              child: Image.asset(Images.appbar_mul,
+                fit: BoxFit.fitHeight,
               ),
             ),
           ),
@@ -188,15 +188,15 @@ class _sitzplan_mulState extends State<sitzplan_mul> {
                         ),
                       ],
                     ),
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 15),
-                          child:  Text("${dateTime.day.toString().padLeft(2,'0')}.${dateTime.month.toString().padLeft(2,'0')}.${dateTime.year} ${dateTime.hour.toString().padLeft(2,'0')}:${dateTime.minute.toString().padLeft(2,'0')}"),
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   mainAxisSize: MainAxisSize.max,
+                    //   children: [
+                    //     Padding(
+                    //       padding: const EdgeInsets.only(bottom: 15),
+                    //       child:  Text("${dateTime.day.toString().padLeft(2,'0')}.${dateTime.month.toString().padLeft(2,'0')}.${dateTime.year} ${dateTime.hour.toString().padLeft(2,'0')}:${dateTime.minute.toString().padLeft(2,'0')}"),
+                    //     ),
+                    //   ],
+                    // ),
                     Expanded(
                       child: GridView(
                         padding: EdgeInsets.zero,
@@ -300,19 +300,7 @@ class _sitzplan_mulState extends State<sitzplan_mul> {
                               ),
                             ),
                           ),
-                          GestureDetector(
-                            onTap: (){
-                              pickDateTime(8);
-                            },
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: SvgPicture.asset(Images.tisch8,
-                                width: 300,
-                                height: 200,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          ),
+
                         ],
                       ),
                     ),

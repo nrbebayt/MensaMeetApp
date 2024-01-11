@@ -74,15 +74,17 @@ flutter:
      - assets/logo.svg
      - assets/Logo_light.svg
      - assets/setting_light.svg
-     - assets/Images/bottrop.png
-     - assets/Images/duisburg.png
-     - assets/Images/muelheim.png
+     - assets/Images/rw.png
+     - assets/Images/essen.png
+     - assets/Images/aachen.png
      - assets/Images/teaser1.jpg
      - assets/Images/teaser2.jpg
      - assets/Images/teaser3.jpg
      - assets/Images/speiseplan1.png
      - assets/Images/speiseplan2.png
-     - assets/appbar_background.png
+     - assets/appbar_mul.png
+     - assets/appbar_bot.png
+     - assets/appbar_duis.png
      - assets/Images/tisch/tisch1.svg
      - assets/Images/tisch/tisch2.svg
      - assets/Images/tisch/tisch3.svg
@@ -94,6 +96,7 @@ flutter:
      - assets/Images/mul_new.png
      - assets/Images/dus_new.png
      - assets/Images/bot_new.png
+     - assets/register.svg
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

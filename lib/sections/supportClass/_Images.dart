@@ -6,16 +6,21 @@ class Images {
   static const String bottrop = 'assets/Images/bottrop.png';
   static const String muelheim = 'assets/Images/muelheim.png';
   static const String duisburg = 'assets/Images/duisburg.png';
-  static const String dusnew = 'assets/Images/dus_new.png';
-  static const String botnew = 'assets/Images/bot_new.png';
-  static const String mulnew = 'assets/Images/mul_new.png';
+  static const String duis = 'assets/Images/dus_new.png';
+  static const String bot = 'assets/Images/bot_new.png';
+  static const String mul = 'assets/Images/mul_new.png';
+  static const String aachen = 'assets/Images/aachen.png';
+  static const String rw = 'assets/Images/rw.png';
+  static const String essen = 'assets/Images/essen.png';
   static const String settings = 'assets/Images/Settings.svg';
   static const String speiseplan1 = 'assets/Images/speiseplan1.png';
   static const String speiseplan2 = 'assets/Images/speiseplan2.png';
   static const String teaser1 = 'assets/Images/teaser1.jpg';
   static const String teaser2 = 'assets/Images/teaser2.jpg';
   static const String teaser3 = 'assets/Images/teaser3.jpg';
-  static const String appbar = 'assets/appbar_background.png';
+  static const String appbar_bot = 'assets/appbar_bot.png';
+  static const String appbar_mul = 'assets/appbar_mul.png';
+  static const String appbar_duis = 'assets/appbar_duis.png';
   static const String tisch1 = 'assets/Images/tisch/tisch1.svg';
   static const String tisch2 = 'assets/Images/tisch/tisch2.svg';
   static const String tisch3 = 'assets/Images/tisch/tisch3.svg';
@@ -24,4 +29,5 @@ class Images {
   static const String tisch6 = 'assets/Images/tisch/tisch6.svg';
   static const String tisch7 = 'assets/Images/tisch/tisch7.svg';
   static const String tisch8 = 'assets/Images/tisch/tisch8.svg';
+  static const String register = 'assets/register.svg';
 }

@@ -7,6 +7,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:mensa_meet_app/sections/auth/authentication_service.dart';
 import 'package:mensa_meet_app/sections/home/homepage.dart';
 import 'package:mensa_meet_app/sections/sitzplan/sitzplan_bot.dart';
+import 'package:mensa_meet_app/sections/sitzplan/sitzplan_duis.dart';
 import 'package:mensa_meet_app/sections/sitzplan/sitzplan_mul.dart';
 import 'package:mensa_meet_app/sections/supportClass/_Colors.dart';
 import 'package:mensa_meet_app/sections/supportClass/_Images.dart';
@@ -77,8 +78,8 @@ class _HomeState extends State<Home> {
           flexibleSpace: FlexibleSpaceBar(
             background: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.asset(Images.appbar,
-                fit: BoxFit.fill,
+              child: Image.asset(Images.appbar_bot,
+                fit: BoxFit.fitHeight,
               ),
             ),
           ),
@@ -106,7 +107,6 @@ class _HomeState extends State<Home> {
             }
             widget.index = index;
             print(listOfMeetings.length);
-
             setState(() {
 
             });
@@ -148,7 +148,7 @@ class _HomeState extends State<Home> {
                       },
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: Image.asset(Images.botnew,
+                        child: Image.asset(Images.bot,
                           width: 320,
                           height: 130,
                           fit: BoxFit.fitWidth,
@@ -156,12 +156,18 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   ),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(Images.dusnew,
-                      width: 320,
-                      height: 130,
-                      fit: BoxFit.fitWidth,
+                  GestureDetector(
+                    onTap: () async{
+                      Navigator.pop(context);
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> sitzplan_duis()));
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.asset(Images.duis,
+                        width: 320,
+                        height: 130,
+                        fit: BoxFit.fitWidth,
+                      ),
                     ),
                   ),
                   GestureDetector(
@@ -171,7 +177,7 @@ class _HomeState extends State<Home> {
                     },
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
-                      child: Image.asset(Images.mulnew,
+                      child: Image.asset(Images.mul,
                         width: 320,
                         height: 130,
                         fit: BoxFit.fitWidth,
@@ -180,7 +186,7 @@ class _HomeState extends State<Home> {
                   ),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(Images.duisburg,
+                    child: Image.asset(Images.rw,
                       width: 320,
                       height: 130,
                       fit: BoxFit.fitWidth,
@@ -188,7 +194,7 @@ class _HomeState extends State<Home> {
                   ),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(Images.bottrop,
+                    child: Image.asset(Images.essen,
                       width: 320,
                       height: 230,
                       fit: BoxFit.contain,
@@ -196,7 +202,7 @@ class _HomeState extends State<Home> {
                   ),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(Images.muelheim,
+                    child: Image.asset(Images.aachen,
                       width: 320,
                       height: 130,
                       fit: BoxFit.fitWidth,

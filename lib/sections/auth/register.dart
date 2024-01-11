@@ -2,6 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:mensa_meet_app/sections/auth_home_wrapper.dart';
 import 'package:mensa_meet_app/sections/auth/authentication_service.dart';
 
+import 'package:flutter_svg/svg.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:mensa_meet_app/sections/supportClass/_Colors.dart';
+
+import '../auth/authentication_service.dart';
+import '../auth_home_wrapper.dart';
+import '../supportClass/_Images.dart';
+
 
 class Register extends StatefulWidget {
   final Function changeLoginStatus;
@@ -26,19 +34,36 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: colorlib.backgroundColor,
         appBar: AppBar(
-          backgroundColor: Colors.deepOrangeAccent,
-          title: const Text('Register Page'),
+          toolbarHeight: 130,
+          backgroundColor: colorlib.backgroundColor,
+          title: Padding(
+            padding: const EdgeInsets.only(top: 15, left: 15),
+            child: SvgPicture.asset(Images.register),
+          ),
+          flexibleSpace: FlexibleSpaceBar(
+            background: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.asset(Images.appbar_bot,
+                fit: BoxFit.fitHeight,
+              ),
+            ),
+          ),
           actions: <Widget>[
+
             TextButton.icon(
-                onPressed:() async{
+                onPressed: () async {
                   widget.changeLoginStatus();
                 },
-                icon: const Icon(Icons.account_box_rounded),
-                label: const Text('Login')),
+                icon: const Icon(Icons.login_outlined,
+                    color: Colors.white),
+                label: const Text('Login',
+                  style: TextStyle(color: Colors.white),))
           ],
         ),
         body: Container(
+
           padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
           child: Form(
               key: formStateKey,
@@ -90,7 +115,7 @@ class _RegisterState extends State<Register> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
+                      backgroundColor: colorlib.red,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(7),
                       ),
@@ -105,6 +130,7 @@ class _RegisterState extends State<Register> {
                 ],
               )
           ),
+
         )
     );
   }

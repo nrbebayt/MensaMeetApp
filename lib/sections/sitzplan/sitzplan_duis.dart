@@ -27,20 +27,20 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../auth/authentication_service.dart';
 import '../auth_home_wrapper.dart';
 
-class sitzplan_bot extends StatefulWidget {
-  const sitzplan_bot({super.key});
+class sitzplan_duis extends StatefulWidget {
+  const sitzplan_duis({super.key});
 
   @override
-  State<sitzplan_bot> createState() => _sitzplan_botState();
+  State<sitzplan_duis> createState() => _sitzplan_duisState();
 }
 
-const campus = "Mensa Bottrop";
+const campus = "U-Café Duisburg";
 var currentTable = 0;
 
 DateTime _dateTime = DateTime.now();
 TimeOfDay selectedTime = TimeOfDay.now();
 
-class _sitzplan_botState extends State<sitzplan_bot> {
+class _sitzplan_duisState extends State<sitzplan_duis> {
   int currentPageIndex = 0;
   DateTime dateTime = DateTime(2024,1,10,1,24);
 
@@ -108,7 +108,7 @@ class _sitzplan_botState extends State<sitzplan_bot> {
           flexibleSpace: FlexibleSpaceBar(
             background: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.asset(Images.appbar_bot,
+              child: Image.asset(Images.appbar_duis,
                 fit: BoxFit.fitHeight,
               ),
             ),
@@ -183,7 +183,7 @@ class _sitzplan_botState extends State<sitzplan_bot> {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 15),
                         child: Text(
-                          'Sitzplatz Mensa Bottrop',
+                          'Sitzplatz U-Café Duisburg',
                             style: TextStyle(fontSize: 22),
                         ),
                       ),
