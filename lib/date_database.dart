@@ -100,4 +100,12 @@ class MeetingDatabase {
           'nutzer': users,
     });
   }
+
+  //delete a meeting with the given id
+  Future<void> deleteMeeting(String meetingID) async{
+    CollectionReference collectionReference = FirebaseFirestore.instance.collection('termine');
+    DocumentReference documentReference = collectionReference.doc(meetingID);
+
+    collectionReference.doc(meetingID).delete();
+  }
 }
