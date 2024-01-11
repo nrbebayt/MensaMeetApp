@@ -625,6 +625,9 @@ class _HomeState extends State<Home> {
                     leading: Icon(Icons.notifications_sharp),
                     title: Text('${item.uhrzeit}'),
                     subtitle: Text('This is a notification'),
+                    onTap:(){
+                      if(!item.inMeeting) MeetingDatabase().joinMeeting(item.meetingID);
+                    },
                   ),
                 ),
               ],

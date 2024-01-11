@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'dart:developer';
 //Use Hexcode for Colors
 import 'package:hexcolor/hexcolor.dart';
+import 'package:mensa_meet_app/date_database.dart';
 import 'package:mensa_meet_app/sections/home/home.dart';
 import 'package:mensa_meet_app/sections/home/homepage.dart';
 import 'package:mensa_meet_app/sections/supportClass/_Colors.dart';
@@ -61,28 +62,6 @@ class _sitzplanState extends State<sitzplan> {
       );
     },
   );
-  Future<void> addDataToFirebase(String campus, String date, String time, int table,String user) async {
-    try {
-      // Verbinden Sie sich mit Ihrer Firestore-Datenbank
-      FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-      // Fügen Sie Daten in eine Sammlung hinzu
-      List<String> users = <String>[];
-      users.add(user);
-      await firestore.collection('termine').add({
-        'campus': campus,
-        'datum': date,
-        'uhrzeit': time,
-        'tisch': table,
-        'nutzer': users
-        // Weitere Felder nach Bedarf hinzufügen
-      });
-
-      print('Daten erfolgreich in Firebase geschrieben!');
-    } catch (e) {
-      print('Fehler beim Schreiben in Firebase: $e');
-    }
-  }
 
   Future pickDateTime(int num) async{
     DateTime? date = await pickDate();
@@ -103,7 +82,7 @@ class _sitzplanState extends State<sitzplan> {
       this.dateTime = dateTime;
       String date = "${dateTime.day.toString().padLeft(2,'0')}.${dateTime.month.toString().padLeft(2,'0')}.${dateTime.year}";
       String time = "${dateTime.hour.toString().padLeft(2,'0')}:${dateTime.minute.toString().padLeft(2,'0')}";
-      addDataToFirebase(campus,date,time,num,"TestUser");
+      MeetingDatabase().addDataToFirebase(campus,date,time,num,FirebaseAuth.instance.currentUser!.uid);
     });
   }
 

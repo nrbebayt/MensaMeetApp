@@ -82,7 +82,7 @@ class _HomepageState extends State<Homepage>{
                   child: Text('Test set database data',
                       style: TextStyle(color: Colors.white)),
                   onPressed: () async {
-                    await MeetingDatabase().addMeetingToDatabase("ein datum", "eine uhrzeit","Bottrop",1, FirebaseAuth.instance.currentUser!.uid);
+                    //await MeetingDatabase().addMeetingToDatabase("ein datum", "eine uhrzeit","Bottrop",1, FirebaseAuth.instance.currentUser!.uid);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
