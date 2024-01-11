@@ -119,7 +119,7 @@ class _sitzplanState extends State<sitzplan> {
             setState(() {
               currentPageIndex = index;
               Navigator.pop(context);
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> Home(index: 2)));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> Home(index: index)));
             });
           },
           indicatorColor: colorlib.red,

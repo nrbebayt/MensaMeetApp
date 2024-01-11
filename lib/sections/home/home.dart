@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer';
 import 'package:hexcolor/hexcolor.dart';
@@ -24,18 +25,30 @@ import '../../date_database.dart';
 import '../auth_home_wrapper.dart';
 
 class Home extends StatefulWidget {
-  final int index;
+  late int index;
   Home({required this.index});
+
+  @override
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-   int currentPageIndex = 0;
-   List<MeetingData> listOfMeetings = <MeetingData>[];
+  List<MeetingData> listOfMeetings = <MeetingData>[];
+  @override
+  initState() {
+    super.initState();
 
-
+    //initializes listOfMeetings before build method is executed (in case we use the navigation bar outside
+    // of the home class to navigate to the meetups)
+    MeetingDatabase().getListOfAllMeetings().then((value){
+      setState(() {
+        listOfMeetings = value;
+      });
+    });
+  }
+   //int currentPageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +80,7 @@ class _HomeState extends State<Home> {
             if(index == 2) {
               listOfMeetings = await MeetingDatabase().getListOfAllMeetings();
             }
-            currentPageIndex = index;
+            widget.index = index;
             print(listOfMeetings.length);
 
             setState(() {
@@ -75,7 +88,7 @@ class _HomeState extends State<Home> {
             });
           },
           indicatorColor: colorlib.red,
-          selectedIndex: currentPageIndex,
+          selectedIndex: widget.index,
           destinations: const <Widget>[
             NavigationDestination(
               selectedIcon: Icon(Icons.home),
@@ -625,15 +638,20 @@ class _HomeState extends State<Home> {
                     leading: Icon(Icons.notifications_sharp),
                     title: Text('${item.uhrzeit}'),
                     subtitle: Text('This is a notification'),
-                    onTap:(){
-                      if(!item.inMeeting) MeetingDatabase().joinMeeting(item.meetingID);
+                    onTap:() async {
+                      //if(!item.inMeeting) MeetingDatabase().joinMeeting(item.meetingID);
+                      await MeetingDatabase().deleteMeeting(item.meetingID);
+                      listOfMeetings = await MeetingDatabase().getListOfAllMeetings();
+                      setState(() {
+
+                      });
                     },
                   ),
                 ),
               ],
             ),
           ),
-        ][currentPageIndex],
+        ][widget.index],
       ),
     );
   }
