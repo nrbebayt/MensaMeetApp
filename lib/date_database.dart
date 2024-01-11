@@ -17,12 +17,12 @@ class MeetingData {
 class MeetingDatabase {
 
   CollectionReference collectionReference =
-      FirebaseFirestore.instance.collection('termine');
+      FirebaseFirestore.instance.collection('terminee');
 
   List<String> b = <String>["asdf", "bcde", "gjlk"];
 
 
-  Future<void> addDataToFirebase(String campus, String date, String time, int table,String user) async {
+  Future<void> addDataToFirebase(String campus, DateTime dateTime, int table,String user) async {
     try {
       // Verbinden Sie sich mit Ihrer Firestore-Datenbank
       FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -30,10 +30,9 @@ class MeetingDatabase {
       // Fügen Sie Daten in eine Sammlung hinzu
       List<String> users = <String>[];
       users.add(user);
-      await firestore.collection('termine').add({
+      await firestore.collection('terminee').add({
         'campus': campus,
-        'datum': date,
-        'uhrzeit': time,
+        'dateTime': dateTime,
         'tisch': table,
         'nutzer': users
         // Weitere Felder nach Bedarf hinzufügen
@@ -48,23 +47,34 @@ class MeetingDatabase {
   Future<List<MeetingData>> getListOfAllMeetings() async {
     List<MeetingData> list = <MeetingData>[];
 
-    await FirebaseFirestore.instance.collection('termine').get().then(
-      (value) {
+    await FirebaseFirestore.instance.collection('terminee').get().then(
+      (value) async {
         for (var termin in value.docs) {
             var userArray = termin['nutzer'];
             List<String> users = List<String>.from(userArray);
             bool inMeeting = users.contains(FirebaseAuth.instance.currentUser!.uid);
 
+            var dateTime = (termin.get('dateTime') as Timestamp).toDate();
+            String date = "${dateTime.day.toString().padLeft(2,'0')}.${dateTime.month.toString().padLeft(2,'0')}.${dateTime.year}";
+            String time = "${dateTime.hour.toString().padLeft(2,'0')}:${dateTime.minute.toString().padLeft(2,'0')}";
+
+            //checks if one week has passed after the dateTime
+            if(DateTime.now().subtract(Duration(days: 7)).isAfter(dateTime)){
+              await deleteMeeting(termin.id);
+              break;
+            };
+
             MeetingData meetingData = (MeetingData(
                 termin.get('campus'),
-                termin.get('datum'),
-                termin.get('uhrzeit'),
+                date,
+                time,
                 termin.get('tisch'),
                 List<String>.from(userArray),
                 termin.id,
                 inMeeting)
             );
             list.add(meetingData);
+            print(meetingData.campus);
           }
       },
     );
@@ -73,7 +83,7 @@ class MeetingDatabase {
 
   //joins a meeting by adding user id to the list of users of the chosen meeting
   Future<void> joinMeeting(String meetingID) async{
-    CollectionReference collectionReference = FirebaseFirestore.instance.collection('termine');
+    CollectionReference collectionReference = FirebaseFirestore.instance.collection('terminee');
     DocumentReference documentReference = collectionReference.doc(meetingID);
 
     //create an empty string of users to populate with the existing users of the meeting
@@ -91,8 +101,10 @@ class MeetingDatabase {
       //create List<String> from the existing users inside the meeting
       users = List<String>.from(userArray);
 
-      //add own user id to users
-      users.add(FirebaseAuth.instance.currentUser!.uid);
+      //add own user id to users unless it is already there
+      if(!users.contains(FirebaseAuth.instance.currentUser!.uid)) {
+        users.add(FirebaseAuth.instance.currentUser!.uid);
+      }
     });
 
     //updates only the users field inside the database
@@ -102,8 +114,42 @@ class MeetingDatabase {
   }
 
   //delete a meeting with the given id
+  Future<void> leaveMeeting(String meetingID) async{
+    CollectionReference collectionReference = FirebaseFirestore.instance.collection('terminee');
+    DocumentReference documentReference = collectionReference.doc(meetingID);
+
+    //create an empty string of users to populate with the existing users of the meeting
+    List<String> users = <String>[];
+
+    //get userArray from database for the given meeting id
+    await documentReference.get().then((value) async {
+      dynamic userArray;
+      try {
+        userArray = value.get('nutzer');
+      }
+      catch(e){
+        log(e.toString());
+      }
+      //create List<String> from the existing users inside the meeting
+      users = List<String>.from(userArray);
+
+      //add own user id to users
+      users.remove(FirebaseAuth.instance.currentUser!.uid);
+    });
+
+    if(users.length <= 0){
+      await deleteMeeting(meetingID);
+    }
+    else {
+      collectionReference.doc(meetingID).update({
+        'nutzer': users,
+      });
+    }
+  }
+
+  //delete a meeting with the given id
   Future<void> deleteMeeting(String meetingID) async{
-    CollectionReference collectionReference = FirebaseFirestore.instance.collection('termine');
+    CollectionReference collectionReference = FirebaseFirestore.instance.collection('terminee');
     DocumentReference documentReference = collectionReference.doc(meetingID);
 
     collectionReference.doc(meetingID).delete();

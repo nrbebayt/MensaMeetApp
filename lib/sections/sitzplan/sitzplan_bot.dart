@@ -82,9 +82,8 @@ class _sitzplan_botState extends State<sitzplan_bot> {
 
     setState(()  {
       this.dateTime = dateTime;
-      String date = "${dateTime.day.toString().padLeft(2,'0')}.${dateTime.month.toString().padLeft(2,'0')}.${dateTime.year}";
-      String time = "${dateTime.hour.toString().padLeft(2,'0')}:${dateTime.minute.toString().padLeft(2,'0')}";
-      MeetingDatabase().addDataToFirebase(campus,date,time,num,FirebaseAuth.instance.currentUser!.uid);
+
+      MeetingDatabase().addDataToFirebase(campus,dateTime,num,FirebaseAuth.instance.currentUser!.uid);
     });
   }
 

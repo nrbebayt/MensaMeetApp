@@ -2,10 +2,12 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'dart:developer';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mensa_meet_app/sections/auth/authentication_service.dart';
 import 'package:mensa_meet_app/sections/home/homepage.dart';
+import 'package:mensa_meet_app/sections/notification_handler.dart';
 import 'package:mensa_meet_app/sections/sitzplan/sitzplan_bot.dart';
 import 'package:mensa_meet_app/sections/sitzplan/sitzplan_duis.dart';
 import 'package:mensa_meet_app/sections/sitzplan/sitzplan_mul.dart';
@@ -41,11 +43,47 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+Map<String, int> userCountMapOfMyMeetings = {};
+
+
+///maps the meetingID to the user count for all meetings which the current user is part of
+///to later check if another user was added to one of the
+///current users meetings
+void refreshUserCountMap(List<MeetingData> listOfMeetings){
+  for(var meeting in listOfMeetings){
+    if(meeting.inMeeting){
+      String meetingID = meeting.meetingID;
+      int userCount = meeting.nutzer.length;
+      userCountMapOfMyMeetings[meetingID] = userCount;
+      //print("USERCOUNT: ");
+      //print(userCount);
+
+    }
+  }
+}
+
+void checkIfNewUserJoined(List<MeetingData> listOfMeetings){
+  for(var meeting in listOfMeetings){
+    if(userCountMapOfMyMeetings.containsKey(meeting.meetingID)){
+      int oldUserCount = userCountMapOfMyMeetings[meeting.meetingID]!;
+      int newUserCount = meeting.nutzer.length;
+      //print("OLD: "); print(oldUserCount);
+      //print("NEW: "); print(newUserCount);
+
+      if(meeting.nutzer.length > userCountMapOfMyMeetings[meeting.meetingID]!){
+        NotificationHandler().showNotification("MensaMeet", "A user has joined your Meetup!", flutterLocalNotificationsPlugin);
+      }
+    }
+  }
+}
+
 class _HomeState extends State<Home> {
    int currentPageIndex = 0;
    List<MeetingData> listOfMeetings = <MeetingData>[];
    @override
    initState() {
+     NotificationHandler().initialize(flutterLocalNotificationsPlugin);
      super.initState();
 
      //initializes listOfMeetings before build method is executed (in case we use the navigation bar outside
@@ -55,6 +93,9 @@ class _HomeState extends State<Home> {
          listOfMeetings = value;
        });
      });
+     checkIfNewUserJoined(listOfMeetings);
+     refreshUserCountMap(listOfMeetings);
+
    }
    final ButtonStyle style = ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
 
@@ -104,6 +145,8 @@ class _HomeState extends State<Home> {
           onDestinationSelected: (int index) async {
             if(index == 2) {
               listOfMeetings = await MeetingDatabase().getListOfAllMeetings();
+              checkIfNewUserJoined(listOfMeetings);
+              refreshUserCountMap(listOfMeetings);
             }
             widget.index = index;
             print(listOfMeetings.length);
@@ -813,8 +856,15 @@ class _HomeState extends State<Home> {
                                           mainAxisSize: MainAxisSize.max,
                                           children: [
                                             ElevatedButton(
-                                              onPressed: () {
-                                                if(!item.inMeeting) MeetingDatabase().joinMeeting(item.meetingID);
+                                              onPressed:
+                                                item.inMeeting ? null : () async {
+                                                  await MeetingDatabase().joinMeeting(item.meetingID);
+                                                  listOfMeetings = await MeetingDatabase().getListOfAllMeetings();
+                                                  checkIfNewUserJoined(listOfMeetings);
+                                                  refreshUserCountMap(listOfMeetings);
+                                                  NotificationHandler().showNotification("MensaMeet:", "Du bist einem Meetup beigetreten für den ${item.datum} um ${item.uhrzeit}.", flutterLocalNotificationsPlugin);
+                                                  setState(() {
+                                                  });
                                               },
                                               // style: ButtonStyle(elevation: MaterialStateProperty(12.0 )),
                                               style: ElevatedButton.styleFrom(
@@ -868,58 +918,26 @@ class _HomeState extends State<Home> {
                           children: [
                             Expanded(
                               child: Padding(
-                                padding: EdgeInsets.all(10),
-                                child: GridView(
-                                  padding: EdgeInsets.zero,
-                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 5,
-                                    crossAxisSpacing: 15,
-                                    mainAxisSpacing: 5,
-                                    childAspectRatio: 1,
-                                  ),
-                                  scrollDirection: Axis.vertical,
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(24),
-                                      child: Image.network(
-                                        'https://picsum.photos/seed/258/600',
-                                        width: 5,
-                                        height: 20,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(24),
-                                      child: Image.network(
-                                        'https://picsum.photos/seed/258/600',
-                                        width: 5,
-                                        height: 20,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(8),
-                                      child: Image.network(
-                                        'https://picsum.photos/seed/258/600',
-                                        width: 5,
-                                        height: 20,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ],
+                                padding: EdgeInsetsDirectional.fromSTEB(20, 0, 15, 0),
+                                child: Text(
+                                  'Nutzer: ${item.nutzer.length}',
+                                  style: TextStyle(fontSize: 20.0),
                                 ),
                               ),
                             ),
                             Padding(
                               padding: EdgeInsetsDirectional.fromSTEB(0, 0, 15, 0),
                               child:  ElevatedButton(
-                                onPressed: () async {
-                                  //if(!item.inMeeting) MeetingDatabase().joinMeeting(item.meetingID);
-                                  await MeetingDatabase().deleteMeeting(item.meetingID);
-                                  listOfMeetings = await MeetingDatabase().getListOfAllMeetings();
-                                  setState(() {
+                                onPressed:
+                                  !item.inMeeting ? null : () async {
+                                    await MeetingDatabase().leaveMeeting(item.meetingID);
+                                    listOfMeetings = await MeetingDatabase().getListOfAllMeetings();
+                                    checkIfNewUserJoined(listOfMeetings);
+                                    refreshUserCountMap(listOfMeetings);
+                                    NotificationHandler().showNotification("MensaMeet:", "Du hast ein Meetup verlassen.", flutterLocalNotificationsPlugin);
+                                    setState(() {
 
-                                  });
+                                    });
                                 },
                                 // style: ButtonStyle(elevation: MaterialStateProperty(12.0 )),
                                 style: ElevatedButton.styleFrom(
