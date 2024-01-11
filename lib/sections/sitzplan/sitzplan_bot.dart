@@ -26,11 +26,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../auth_home_wrapper.dart';
 
-class sitzplan extends StatefulWidget {
-  const sitzplan({super.key});
+class sitzplan_bot extends StatefulWidget {
+  const sitzplan_bot({super.key});
 
   @override
-  State<sitzplan> createState() => _sitzplanState();
+  State<sitzplan_bot> createState() => _sitzplan_botState();
 }
 
 const campus = "Mensa Bottrop";
@@ -39,7 +39,7 @@ var currentTable = 0;
 DateTime _dateTime = DateTime.now();
 TimeOfDay selectedTime = TimeOfDay.now();
 
-class _sitzplanState extends State<sitzplan> {
+class _sitzplan_botState extends State<sitzplan_bot> {
   int currentPageIndex = 0;
   DateTime dateTime = DateTime(2024,1,10,1,24);
 

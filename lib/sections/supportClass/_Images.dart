@@ -6,6 +6,9 @@ class Images {
   static const String bottrop = 'assets/Images/bottrop.png';
   static const String muelheim = 'assets/Images/muelheim.png';
   static const String duisburg = 'assets/Images/duisburg.png';
+  static const String dusnew = 'assets/Images/dus_new.png';
+  static const String botnew = 'assets/Images/bot_new.png';
+  static const String mulnew = 'assets/Images/mul_new.png';
   static const String settings = 'assets/Images/Settings.svg';
   static const String speiseplan1 = 'assets/Images/speiseplan1.png';
   static const String speiseplan2 = 'assets/Images/speiseplan2.png';

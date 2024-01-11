@@ -5,13 +5,18 @@ import 'package:flutter/material.dart';
 import 'dart:developer';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mensa_meet_app/sections/home/homepage.dart';
-import 'package:mensa_meet_app/sections/sitzplan/sitzplan.dart';
+import 'package:mensa_meet_app/sections/sitzplan/sitzplan_bot.dart';
+import 'package:mensa_meet_app/sections/sitzplan/sitzplan_mul.dart';
 import 'package:mensa_meet_app/sections/supportClass/_Colors.dart';
 import 'package:mensa_meet_app/sections/supportClass/_Images.dart';
 import 'package:mensa_meet_app/sections/supportClass/urlHandler.dart';
+
 //TEST
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flip_card/flip_card.dart';
 
 
 
@@ -35,19 +40,22 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<MeetingData> listOfMeetings = <MeetingData>[];
-  @override
-  initState() {
-    super.initState();
+   int currentPageIndex = 0;
+   List<MeetingData> listOfMeetings = <MeetingData>[];
+   @override
+   initState() {
+     super.initState();
 
-    //initializes listOfMeetings before build method is executed (in case we use the navigation bar outside
-    // of the home class to navigate to the meetups)
-    MeetingDatabase().getListOfAllMeetings().then((value){
-      setState(() {
-        listOfMeetings = value;
-      });
-    });
-  }
+     //initializes listOfMeetings before build method is executed (in case we use the navigation bar outside
+     // of the home class to navigate to the meetups)
+     MeetingDatabase().getListOfAllMeetings().then((value){
+       setState(() {
+         listOfMeetings = value;
+       });
+     });
+   }
+   final ButtonStyle style = ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
+
    //int currentPageIndex = 0;
 
   @override
@@ -107,118 +115,205 @@ class _HomeState extends State<Home> {
         ),
         backgroundColor: colorlib.backgroundColor,
         body: <Widget>[
-          //HOMEPAGEE
-          SafeArea(
-            top: true,
+
+          Container(
+            decoration: BoxDecoration(),
+            alignment: AlignmentDirectional(0, -1),
             child: Container(
-              width: MediaQuery.sizeOf(context).width,
-              height: MediaQuery.sizeOf(context).height * 1,
-              decoration: BoxDecoration(color: colorlib.backgroundColor),
-              child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 25),
-                        child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Align(
-                                alignment: AlignmentDirectional(-1, 0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 5.0, bottom: 3.0),
-                                      child: Text('Bottrop',
-                                          textAlign: TextAlign.start),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () async{
-                                        Navigator.pop(context);
-                                        Navigator.push(context, MaterialPageRoute(builder: (context)=> sitzplan()));
-                                      },
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(16),
-                                        child: Image.asset(
-                                          Images.bottrop,
-                                          width: 320,
-                                          height: 130,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ]),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 25),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Column(
-                              mainAxisSize: MainAxisSize.max,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 8.0, bottom: 3.0),
-                                  child:
-                                      Text('Mülheim', textAlign: TextAlign.start),
-                                ),
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(16),
-                                  child: Image.asset(
-                                    Images.muelheim,
-                                    width: 320,
-                                    height: 130,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+              width: MediaQuery.sizeOf(context).width * 0.90,
+              height: 620,
+              child: CarouselSlider(
+                items: [
+                  Container(
+                    child: GestureDetector(
+                      onTap: () async{
+                        Navigator.pop(context);
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> sitzplan_bot()));
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.asset(Images.botnew,
+                          width: 320,
+                          height: 130,
+                          fit: BoxFit.fitWidth,
                         ),
                       ),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Column(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 8.0, bottom: 3.0),
-                                child:
-                                    Text('Duisburg', textAlign: TextAlign.start),
-                              ),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(16),
-                                child: Image.asset(
-                                  Images.duisburg,
-                                  width: 320,
-                                  height: 130,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
+                    ),
                   ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.asset(Images.dusnew,
+                      width: 320,
+                      height: 130,
+                      fit: BoxFit.fitWidth,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () async{
+                      Navigator.pop(context);
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> sitzplan_mul()));
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.asset(Images.mulnew,
+                        width: 320,
+                        height: 130,
+                        fit: BoxFit.fitWidth,
+                      ),
+                    ),
+                  ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.asset(Images.duisburg,
+                      width: 320,
+                      height: 130,
+                      fit: BoxFit.fitWidth,
+                    ),
+                  ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.asset(Images.bottrop,
+                      width: 320,
+                      height: 230,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.asset(Images.muelheim,
+                      width: 320,
+                      height: 130,
+                      fit: BoxFit.fitWidth,
+                    ),
+                  ),
+                ],
+
+                options: CarouselOptions(
+                  initialPage: 1,
+                  viewportFraction: 0.3,
+                  disableCenter: true,
+                  enlargeCenterPage: true,
+                  enlargeFactor: 0.25,
+                  enableInfiniteScroll: true,
+                  scrollDirection: Axis.vertical,
+                  autoPlay: false,
+
                 ),
               ),
             ),
           ),
+          //HOMEPAGEE
+          // SafeArea(
+          //   top: true,
+          //   child: Container(
+          //     width: MediaQuery.sizeOf(context).width,
+          //     height: MediaQuery.sizeOf(context).height * 1,
+          //     decoration: BoxDecoration(color: colorlib.backgroundColor),
+          //     child: Padding(
+          //       padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+          //       child: SingleChildScrollView(
+          //         child: Column(
+          //           mainAxisSize: MainAxisSize.max,
+          //           children: [
+          //             Padding(
+          //               padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 25),
+          //               child: Row(
+          //                   mainAxisSize: MainAxisSize.max,
+          //                   crossAxisAlignment: CrossAxisAlignment.center,
+          //                   children: [
+          //                     Align(
+          //                       alignment: AlignmentDirectional(-1, 0),
+          //                       child: Column(
+          //                         mainAxisSize: MainAxisSize.max,
+          //                         crossAxisAlignment: CrossAxisAlignment.start,
+          //                         children: [
+          //                           Padding(
+          //                             padding: const EdgeInsets.only(
+          //                                 left: 5.0, bottom: 3.0),
+          //                             child: Text('Bottrop',
+          //                                 textAlign: TextAlign.start),
+          //                           ),
+          //                           GestureDetector(
+          //                             onTap: () async{
+          //                               Navigator.pop(context);
+          //                               Navigator.push(context, MaterialPageRoute(builder: (context)=> sitzplan_bot()));
+          //                             },
+          //                             child: ClipRRect(
+          //                               borderRadius: BorderRadius.circular(16),
+          //                               child: Image.asset(
+          //                                 Images.bottrop,
+          //                                 width: 320,
+          //                                 height: 130,
+          //                                 fit: BoxFit.cover,
+          //                               ),
+          //                             ),
+          //                           ),
+          //                         ],
+          //                       ),
+          //                     ),
+          //                   ]),
+          //             ),
+          //             Padding(
+          //               padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 25),
+          //               child: Row(
+          //                 mainAxisSize: MainAxisSize.max,
+          //                 children: [
+          //                   Column(
+          //                     mainAxisSize: MainAxisSize.max,
+          //                     crossAxisAlignment: CrossAxisAlignment.start,
+          //                     children: [
+          //                       Padding(
+          //                         padding: const EdgeInsets.only(
+          //                             left: 8.0, bottom: 3.0),
+          //                         child:
+          //                             Text('Mülheim', textAlign: TextAlign.start),
+          //                       ),
+          //                       ClipRRect(
+          //                         borderRadius: BorderRadius.circular(16),
+          //                         child: Image.asset(
+          //                           Images.muelheim,
+          //                           width: 320,
+          //                           height: 130,
+          //                           fit: BoxFit.cover,
+          //                         ),
+          //                       ),
+          //                     ],
+          //                   ),
+          //                 ],
+          //               ),
+          //             ),
+          //             Row(
+          //               mainAxisSize: MainAxisSize.max,
+          //               children: [
+          //                 Column(
+          //                   mainAxisSize: MainAxisSize.max,
+          //                   crossAxisAlignment: CrossAxisAlignment.start,
+          //                   children: [
+          //                     Padding(
+          //                       padding:
+          //                           const EdgeInsets.only(left: 8.0, bottom: 3.0),
+          //                       child:
+          //                           Text('Duisburg', textAlign: TextAlign.start),
+          //                     ),
+          //                     ClipRRect(
+          //                       borderRadius: BorderRadius.circular(16),
+          //                       child: Image.asset(
+          //                         Images.duisburg,
+          //                         width: 320,
+          //                         height: 130,
+          //                         fit: BoxFit.cover,
+          //                       ),
+          //                     ),
+          //                   ],
+          //                 ),
+          //               ],
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
 
           //Speiseplan
           InkWell(
@@ -627,28 +722,200 @@ class _HomeState extends State<Home> {
           ),
 
           /// Notifications page
-          Padding(
-            padding: EdgeInsets.all(8.0),
-
-            child: Column(
-
-              children: <Widget>[
-                for(var item in listOfMeetings) Card(
-                  child: ListTile(
-                    leading: Icon(Icons.notifications_sharp),
-                    title: Text('${item.uhrzeit}'),
-                    subtitle: Text('This is a notification'),
-                    onTap:() async {
-                      //if(!item.inMeeting) MeetingDatabase().joinMeeting(item.meetingID);
-                      await MeetingDatabase().deleteMeeting(item.meetingID);
-                      listOfMeetings = await MeetingDatabase().getListOfAllMeetings();
-                      setState(() {
-
-                      });
-                    },
+          SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding:EdgeInsetsDirectional.fromSTEB(0, 5, 0,0),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text('Deine Meetups',
+                          style: TextStyle(fontSize: 22
+                          )),
+                    ),
                   ),
-                ),
-              ],
+                  for(var item in listOfMeetings) Padding(
+                    padding: const EdgeInsets.only(left:15,top:15),
+                    child: FlipCard(
+                      fill: Fill.fillBack,
+                      direction: FlipDirection.VERTICAL,
+                      speed: 400,
+                      front: Container(
+                        width: 330,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: colorlib.grey,
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(12),
+                            bottomRight: Radius.circular(12),
+                            topLeft: Radius.circular(12),
+                            topRight: Radius.circular(12),
+                          ),
+                        ),
+                        child: Container(
+                          width: 330,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            color: colorlib.offwhite,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(12),
+                              bottomRight: Radius.circular(12),
+                              topLeft: Radius.circular(12),
+                              topRight: Radius.circular(12),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                                          child: Text(
+                                            '${item.campus}',
+                                            style: TextStyle(fontSize: 18.0),
+                                          ),
+                                        ),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                if(!item.inMeeting) MeetingDatabase().joinMeeting(item.meetingID);
+                                              },
+                                              // style: ButtonStyle(elevation: MaterialStateProperty(12.0 )),
+                                              style: ElevatedButton.styleFrom(
+                                                  minimumSize: Size(150, 40),
+                                                  elevation: 5.0,
+                                                  backgroundColor: colorlib.grey,
+                                                  textStyle: const TextStyle(color: Colors.white)),
+                                              child: const Text('Beitreten',
+                                            style: TextStyle(color: Colors.white),)
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '${item.datum}',
+                                            style: TextStyle(fontSize: 16.0),
+                                          ),
+                                          Text(
+                                            '${item.uhrzeit}',
+                                            style: TextStyle(fontSize: 32.0),
+                                          ),
+                                        ]),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      back: Container(
+                        width: 330,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: Color(0xFFDFDFDF),
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(12),
+                            bottomRight: Radius.circular(12),
+                            topLeft: Radius.circular(12),
+                            topRight: Radius.circular(12),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.all(10),
+                                child: GridView(
+                                  padding: EdgeInsets.zero,
+                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 5,
+                                    crossAxisSpacing: 15,
+                                    mainAxisSpacing: 5,
+                                    childAspectRatio: 1,
+                                  ),
+                                  scrollDirection: Axis.vertical,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(24),
+                                      child: Image.network(
+                                        'https://picsum.photos/seed/258/600',
+                                        width: 5,
+                                        height: 20,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(24),
+                                      child: Image.network(
+                                        'https://picsum.photos/seed/258/600',
+                                        width: 5,
+                                        height: 20,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: Image.network(
+                                        'https://picsum.photos/seed/258/600',
+                                        width: 5,
+                                        height: 20,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(0, 0, 15, 0),
+                              child:  ElevatedButton(
+                                onPressed: () async {
+                                  //if(!item.inMeeting) MeetingDatabase().joinMeeting(item.meetingID);
+                                  await MeetingDatabase().deleteMeeting(item.meetingID);
+                                  listOfMeetings = await MeetingDatabase().getListOfAllMeetings();
+                                  setState(() {
+
+                                  });
+                                },
+                                // style: ButtonStyle(elevation: MaterialStateProperty(12.0 )),
+                                style: ElevatedButton.styleFrom(
+                                    minimumSize: Size(150, 40),
+                                    elevation: 5.0,
+                                    backgroundColor: colorlib.grey,
+                                    textStyle: const TextStyle(color: Colors.white)),
+                                child: const Text('Verlassen',
+                                style: TextStyle(color: Colors.redAccent)),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ][widget.index],
