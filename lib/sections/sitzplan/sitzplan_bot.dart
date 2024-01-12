@@ -82,7 +82,6 @@ class _sitzplan_botState extends State<sitzplan_bot> {
 
     setState(()  {
       this.dateTime = dateTime;
-
       MeetingDatabase().addDataToFirebase(campus,dateTime,num,FirebaseAuth.instance.currentUser!.uid);
     });
   }

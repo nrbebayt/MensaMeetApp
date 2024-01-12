@@ -68,8 +68,8 @@ void checkIfNewUserJoined(List<MeetingData> listOfMeetings){
     if(userCountMapOfMyMeetings.containsKey(meeting.meetingID)){
       int oldUserCount = userCountMapOfMyMeetings[meeting.meetingID]!;
       int newUserCount = meeting.nutzer.length;
-      //print("OLD: "); print(oldUserCount);
-      //print("NEW: "); print(newUserCount);
+      print("OLD: "); print(oldUserCount);
+      print("NEW: "); print(newUserCount);
 
       if(meeting.nutzer.length > userCountMapOfMyMeetings[meeting.meetingID]!){
         NotificationHandler().showNotification("MensaMeet", "A user has joined your Meetup!", flutterLocalNotificationsPlugin);
@@ -881,7 +881,7 @@ class _HomeState extends State<Home> {
                                     ),
                                     Column(
                                         mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
@@ -891,6 +891,10 @@ class _HomeState extends State<Home> {
                                           Text(
                                             '${item.uhrzeit}',
                                             style: TextStyle(fontSize: 32.0),
+                                          ),
+                                          Text(
+                                            'Tisch: ${item.tisch}',
+                                            style: TextStyle(fontSize: 10.0),
                                           ),
                                         ]),
                                   ],
