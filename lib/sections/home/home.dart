@@ -68,10 +68,10 @@ void checkIfNewUserJoined(List<MeetingData> listOfMeetings){
       int newUserCount = meeting.user.length;
 
       if(meeting.inMeeting && newUserCount > oldUserCount){
-        NotificationHandler().showNotification("MensaMeet [Termin um ${meeting.time} am ${meeting.date}]:", "Ein user ist deinem Meeting beigetreten.", flutterLocalNotificationsPlugin);
+        NotificationHandler().showNotification("MensaMeet [Termin um ${meeting.time} am ${meeting.date}]:", "Ein User ist deinem Meeting beigetreten.", flutterLocalNotificationsPlugin);
       }
       if(meeting.inMeeting && newUserCount < oldUserCount){
-        NotificationHandler().showNotification("MensaMeet [Termin um ${meeting.time} am ${meeting.date}]:", "Ein user hat dein Meeting verlassen.", flutterLocalNotificationsPlugin);
+        NotificationHandler().showNotification("MensaMeet [Termin um ${meeting.time} am ${meeting.date}]:", "Ein User hat dein Meeting verlassen.", flutterLocalNotificationsPlugin);
       }
     }
   }
