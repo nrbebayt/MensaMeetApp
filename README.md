@@ -1,6 +1,9 @@
 # mensa_meet_app
 
-A new Flutter project.
+Unser Github Repo:
+
+Getestet auf: Pixel 3a API 29 (Android 10.0("Q") | x86)
+Getestet auf: Pixel 3a API 30 (Android 11.0("R") | x86)
 
 ## Getting Started
 

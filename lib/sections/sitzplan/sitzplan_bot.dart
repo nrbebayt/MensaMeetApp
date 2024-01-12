@@ -1,24 +1,13 @@
 //Design
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-//Log
-import 'dart:developer';
+
 //Use Hexcode for Colors
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mensa_meet_app/date_database.dart';
 import 'package:mensa_meet_app/sections/home/home.dart';
 import 'package:mensa_meet_app/sections/supportClass/_Colors.dart';
 import 'package:mensa_meet_app/sections/supportClass/_Images.dart';
-
-//FireBase
-import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-//open URL so we can open PDF's
-import 'package:mensa_meet_app/sections/supportClass/urlHandler.dart';
-//Format Date, Number etc.
-
-//open URL
-import 'package:url_launcher/url_launcher.dart';
 
 //add SVG Support
 import 'package:flutter_svg/flutter_svg.dart';
@@ -36,7 +25,6 @@ class sitzplan_bot extends StatefulWidget {
 const campus = "Mensa Bottrop";
 var currentTable = 0;
 
-DateTime _dateTime = DateTime.now();
 TimeOfDay selectedTime = TimeOfDay.now();
 
 class _sitzplan_botState extends State<sitzplan_bot> {
@@ -89,9 +77,6 @@ class _sitzplan_botState extends State<sitzplan_bot> {
 
   @override
   Widget build(BuildContext context) {
-
-    final hours = dateTime.hour.toString().padLeft(2,'0');
-    final minutes = dateTime.minute.toString().padLeft(2,'0');
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
