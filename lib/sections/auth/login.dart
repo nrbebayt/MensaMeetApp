@@ -107,7 +107,7 @@ class _LoginState extends State<Login> {
                   TextFormField(
                     style: TextStyle(color: Colors.white), // Weiße Textfarbe
                     decoration: InputDecoration(
-                      hintText: 'password',
+                      hintText: 'Passwort',
                       filled: true,
                       fillColor: colorlib.grey, // Dunkelgrauer Hintergrund
                       hintStyle: TextStyle(color: Colors.grey), // Weiße Schriftfarbe für den Platzhalter

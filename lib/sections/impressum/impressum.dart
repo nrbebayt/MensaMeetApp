@@ -54,8 +54,12 @@ class Impressum extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                Text(
-                  'Impressum',
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    'Impressum',
+                      style: TextStyle(fontSize: 22)
+                  ),
                 ),
                 Align(
                   alignment: AlignmentDirectional(-1, -1),

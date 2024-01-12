@@ -1,9 +1,12 @@
 # mensa_meet_app
 
 Unser Github Repo:
-
+https://github.com/nrbebayt/MensaMeetApp
 Getestet auf: Pixel 3a API 29 (Android 10.0("Q") | x86)
 Getestet auf: Pixel 3a API 30 (Android 11.0("R") | x86)
+Unser Github Repo (öffentlich):
+
+
 
 ## Getting Started
 

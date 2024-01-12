@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -926,7 +925,7 @@ class _HomeState extends State<Home> {
                               child: Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(20, 0, 15, 0),
                                 child: Text(
-                                  'user: ${item.user.length}',
+                                  'Nutzer: ${item.user.length}',
                                   style: TextStyle(fontSize: 20.0),
                                 ),
                               ),
