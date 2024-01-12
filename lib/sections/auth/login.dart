@@ -164,7 +164,7 @@ class _LoginState extends State<Login> {
                         borderRadius: BorderRadius.circular(7),
                       ),
                     ),
-                    child: const Text('Go to Home without Outh',
+                    child: const Text('Go to Home without Auth',
                         style: TextStyle(color: Colors.white)),
                   ),
                   const SizedBox(height: 30),

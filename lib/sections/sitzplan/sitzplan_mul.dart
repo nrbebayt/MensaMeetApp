@@ -7,7 +7,6 @@ import 'dart:developer';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mensa_meet_app/date_database.dart';
 import 'package:mensa_meet_app/sections/home/home.dart';
-import 'package:mensa_meet_app/sections/home/homepage.dart';
 import 'package:mensa_meet_app/sections/supportClass/_Colors.dart';
 import 'package:mensa_meet_app/sections/supportClass/_Images.dart';
 
@@ -62,6 +61,7 @@ class _sitzplan_mulState extends State<sitzplan_mul> {
     },
   );
 
+  //Adds a meeting to the database upon completing the date picker and timer picker
   Future pickDateTime(int num) async{
     DateTime? date = await pickDate();
     if(date == null) return;
@@ -92,6 +92,7 @@ class _sitzplan_mulState extends State<sitzplan_mul> {
 
     const String appTitle = 'Flutter layout demo';
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(useMaterial3: true),
       title: appTitle,
       home: Scaffold(

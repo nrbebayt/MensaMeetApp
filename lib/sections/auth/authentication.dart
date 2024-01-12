@@ -18,6 +18,7 @@ class _AuthenticationState extends State<Authentication> {
 
   LoginStatus status = LoginStatus.atLoginPage;
 
+  ///Method to switch between the Login and Register Screen.
   void switchBetweenLoginAndRegister(){
     setState(() {
       if(status == LoginStatus.atRegisterPage) {
@@ -31,9 +32,6 @@ class _AuthenticationState extends State<Authentication> {
 
   @override
   Widget build(BuildContext context) {
-    /*return Container(
-      child: Register(),
-    );*/
     if(status == LoginStatus.atRegisterPage){
       return Register(changeLoginStatus: switchBetweenLoginAndRegister);
     }

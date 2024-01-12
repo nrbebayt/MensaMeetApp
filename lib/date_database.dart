@@ -2,88 +2,102 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:developer';
 
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:mensa_meet_app/sections/notification_handler.dart';
+
 class MeetingData {
   String campus;
-  String datum;
-  String uhrzeit;
-  int tisch;
-  List<String> nutzer;
+  String date;
+  String time;
+  int table;
+  List<String> user;
   String meetingID;
   bool inMeeting;
 
-  MeetingData( this.campus, this.datum, this.uhrzeit, this.tisch, this.nutzer, this.meetingID, this.inMeeting);
+  MeetingData( this.campus, this.date, this.time, this.table, this.user, this.meetingID, this.inMeeting);
 }
 
 class MeetingDatabase {
 
   CollectionReference collectionReference =
-      FirebaseFirestore.instance.collection('terminee');
+      FirebaseFirestore.instance.collection('meetings');
 
   List<String> b = <String>["asdf", "bcde", "gjlk"];
 
-
+  ///Adds a new meeting to the database.
   Future<void> addDataToFirebase(String campus, DateTime dateTime, int table,String user) async {
     try {
-      // Verbinden Sie sich mit Ihrer Firestore-Datenbank
+      //Connects with the firestore database
       FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-      // Fügen Sie Daten in eine Sammlung hinzu
+      //Adds data to the collection
       List<String> users = <String>[];
       users.add(user);
-      await firestore.collection('terminee').add({
+      await firestore.collection('meetings').add({
         'campus': campus,
         'dateTime': dateTime,
-        'tisch': table,
-        'nutzer': users
-        // Weitere Felder nach Bedarf hinzufügen
+        'table': table,
+        'user': users
       });
 
-      print('Daten erfolgreich in Firebase geschrieben!');
+      //Notifies the user of the added meeting
+      String date = "${dateTime.day.toString().padLeft(2,'0')}.${dateTime.month.toString().padLeft(2,'0')}.${dateTime.year}";
+      String time = "${dateTime.hour.toString().padLeft(2,'0')}:${dateTime.minute.toString().padLeft(2,'0')}";
+      FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+      NotificationHandler().initialize(flutterLocalNotificationsPlugin);
+      NotificationHandler().showNotification("MensaMeet [Termin um $time am $date]:", "Du hast ein Meetup erstellt.", flutterLocalNotificationsPlugin);
     } catch (e) {
-      print('Fehler beim Schreiben in Firebase: $e');
+      log(e.toString());
     }
   }
 
+  ///Fetches a list of all available meetings from the database to be displayed under MeetUps.
+  ///Returns a List<MeetingData> populated with data from the database.
   Future<List<MeetingData>> getListOfAllMeetings() async {
     List<MeetingData> list = <MeetingData>[];
+    if(FirebaseAuth.instance.currentUser == null) return list;
 
-    await FirebaseFirestore.instance.collection('terminee').get().then(
+    await FirebaseFirestore.instance.collection('meetings').get().then(
       (value) async {
-        for (var termin in value.docs) {
-            var userArray = termin['nutzer'];
+        for (var meeting in value.docs) {
+            var userArray = meeting['user'];
             List<String> users = List<String>.from(userArray);
             bool inMeeting = users.contains(FirebaseAuth.instance.currentUser!.uid);
 
-            var dateTime = (termin.get('dateTime') as Timestamp).toDate();
+            var dateTime = (meeting.get('dateTime') as Timestamp).toDate();
             String date = "${dateTime.day.toString().padLeft(2,'0')}.${dateTime.month.toString().padLeft(2,'0')}.${dateTime.year}";
             String time = "${dateTime.hour.toString().padLeft(2,'0')}:${dateTime.minute.toString().padLeft(2,'0')}";
 
-            //checks if one week has passed after the dateTime
-            if(DateTime.now().subtract(Duration(days: 7)).isAfter(dateTime)){
-              await deleteMeeting(termin.id);
+            //Checks if one week has passed after the dateTime has passed and deletes the meeting
+            if(DateTime.now().subtract(const Duration(days: 7)).isAfter(dateTime)){
+              await deleteMeeting(meeting.id);
+              if (!inMeeting) break;
+              //Notifies the user if he was in the deleted meeting
+              FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+              NotificationHandler().initialize(flutterLocalNotificationsPlugin);
+              NotificationHandler().showNotification("MensaMeet [Termin um $time am $date]:", "Der Termin ist eine Woche alt und wurde gelöscht.", flutterLocalNotificationsPlugin);
               break;
-            };
+            }
 
             MeetingData meetingData = (MeetingData(
-                termin.get('campus'),
+                meeting.get('campus'),
                 date,
                 time,
-                termin.get('tisch'),
+                meeting.get('table'),
                 List<String>.from(userArray),
-                termin.id,
+                meeting.id,
                 inMeeting)
             );
             list.add(meetingData);
-            print(meetingData.campus);
           }
       },
     );
     return list;
   }
 
-  //joins a meeting by adding user id to the list of users of the chosen meeting
+  ///Joins a meeting by adding user id to the list of users of the chosen meeting.
   Future<void> joinMeeting(String meetingID) async{
-    CollectionReference collectionReference = FirebaseFirestore.instance.collection('terminee');
+    CollectionReference collectionReference = FirebaseFirestore.instance.collection('meetings');
     DocumentReference documentReference = collectionReference.doc(meetingID);
 
     //create an empty string of users to populate with the existing users of the meeting
@@ -93,7 +107,7 @@ class MeetingDatabase {
     await documentReference.get().then((value) {
       dynamic userArray;
       try {
-        userArray = value.get('nutzer');
+        userArray = value.get('user');
       }
       catch(e){
         log(e.toString());
@@ -109,13 +123,13 @@ class MeetingDatabase {
 
     //updates only the users field inside the database
     collectionReference.doc(meetingID).update({
-          'nutzer': users,
+          'user': users,
     });
   }
 
-  //delete a meeting with the given id
+  ///Leave a meeting with the given id. Calls the delete method if the meeting is empty after leaving.
   Future<void> leaveMeeting(String meetingID) async{
-    CollectionReference collectionReference = FirebaseFirestore.instance.collection('terminee');
+    CollectionReference collectionReference = FirebaseFirestore.instance.collection('meetings');
     DocumentReference documentReference = collectionReference.doc(meetingID);
 
     //create an empty string of users to populate with the existing users of the meeting
@@ -125,7 +139,7 @@ class MeetingDatabase {
     await documentReference.get().then((value) async {
       dynamic userArray;
       try {
-        userArray = value.get('nutzer');
+        userArray = value.get('user');
       }
       catch(e){
         log(e.toString());
@@ -137,20 +151,19 @@ class MeetingDatabase {
       users.remove(FirebaseAuth.instance.currentUser!.uid);
     });
 
-    if(users.length <= 0){
+    if(users.isEmpty){
       await deleteMeeting(meetingID);
     }
     else {
       collectionReference.doc(meetingID).update({
-        'nutzer': users,
+        'user': users,
       });
     }
   }
 
-  //delete a meeting with the given id
+  ///Delete a meeting with the given id.
   Future<void> deleteMeeting(String meetingID) async{
-    CollectionReference collectionReference = FirebaseFirestore.instance.collection('terminee');
-    DocumentReference documentReference = collectionReference.doc(meetingID);
+    CollectionReference collectionReference = FirebaseFirestore.instance.collection('meetings');
 
     collectionReference.doc(meetingID).delete();
   }

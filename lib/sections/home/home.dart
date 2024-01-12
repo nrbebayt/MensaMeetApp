@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,7 +7,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'dart:developer';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mensa_meet_app/sections/auth/authentication_service.dart';
-import 'package:mensa_meet_app/sections/home/homepage.dart';
 import 'package:mensa_meet_app/sections/notification_handler.dart';
 import 'package:mensa_meet_app/sections/sitzplan/sitzplan_bot.dart';
 import 'package:mensa_meet_app/sections/sitzplan/sitzplan_duis.dart';
@@ -43,63 +43,75 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 Map<String, int> userCountMapOfMyMeetings = {};
+List<MeetingData> listOfMeetings = <MeetingData>[];
 
 
-///maps the meetingID to the user count for all meetings which the current user is part of
+///Maps the meetingID to the user count for all meetings which the current user is part of
 ///to later check if another user was added to one of the
-///current users meetings
+///current users meetings.
 void refreshUserCountMap(List<MeetingData> listOfMeetings){
   for(var meeting in listOfMeetings){
     if(meeting.inMeeting){
       String meetingID = meeting.meetingID;
-      int userCount = meeting.nutzer.length;
+      int userCount = meeting.user.length;
       userCountMapOfMyMeetings[meetingID] = userCount;
-      //print("USERCOUNT: ");
-      //print(userCount);
-
     }
   }
 }
 
+///Checks if a new user joined or left one of the meetings that you're in, to be able to notify the user.
 void checkIfNewUserJoined(List<MeetingData> listOfMeetings){
   for(var meeting in listOfMeetings){
     if(userCountMapOfMyMeetings.containsKey(meeting.meetingID)){
       int oldUserCount = userCountMapOfMyMeetings[meeting.meetingID]!;
-      int newUserCount = meeting.nutzer.length;
-      print("OLD: "); print(oldUserCount);
-      print("NEW: "); print(newUserCount);
+      int newUserCount = meeting.user.length;
 
-      if(meeting.nutzer.length > userCountMapOfMyMeetings[meeting.meetingID]!){
-        NotificationHandler().showNotification("MensaMeet", "A user has joined your Meetup!", flutterLocalNotificationsPlugin);
+      if(meeting.inMeeting && newUserCount > oldUserCount){
+        NotificationHandler().showNotification("MensaMeet [Termin um ${meeting.time} am ${meeting.date}]:", "Ein user ist deinem Meeting beigetreten.", flutterLocalNotificationsPlugin);
+      }
+      if(meeting.inMeeting && newUserCount < oldUserCount){
+        NotificationHandler().showNotification("MensaMeet [Termin um ${meeting.time} am ${meeting.date}]:", "Ein user hat dein Meeting verlassen.", flutterLocalNotificationsPlugin);
       }
     }
   }
 }
 
+///Calls the corresponding methods to refresh the current users local of meetings to be displayed and notify
+///the user if someone joined or left his meeting.
+Future refreshMeetings() async {
+  listOfMeetings = await MeetingDatabase().getListOfAllMeetings();
+  checkIfNewUserJoined(listOfMeetings);
+  refreshUserCountMap(listOfMeetings);
+}
+
+Timer? timer;
+
 class _HomeState extends State<Home> {
    int currentPageIndex = 0;
-   List<MeetingData> listOfMeetings = <MeetingData>[];
    @override
    initState() {
      NotificationHandler().initialize(flutterLocalNotificationsPlugin);
      super.initState();
+     try {
+       timer = Timer.periodic(const Duration(seconds: 2), (Timer t) async {
+         await refreshMeetings();
+
+         //check if mounted to avoid Unhandled Exception: setState() called after dispose
+         if (mounted) setState(() {});
+       });
+     }
+     catch(e){
+       log(e.toString());
+     }
 
      //initializes listOfMeetings before build method is executed (in case we use the navigation bar outside
      // of the home class to navigate to the meetups)
-     MeetingDatabase().getListOfAllMeetings().then((value){
-       setState(() {
-         listOfMeetings = value;
-       });
-     });
-     checkIfNewUserJoined(listOfMeetings);
-     refreshUserCountMap(listOfMeetings);
-
+     refreshMeetings();
+     setState((){});
    }
    final ButtonStyle style = ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
-
-   //int currentPageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -107,6 +119,7 @@ class _HomeState extends State<Home> {
     return MaterialApp(
       theme: ThemeData(useMaterial3: true),
       title: appTitle,
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           toolbarHeight: 130,
@@ -144,15 +157,10 @@ class _HomeState extends State<Home> {
 
           onDestinationSelected: (int index) async {
             if(index == 2) {
-              listOfMeetings = await MeetingDatabase().getListOfAllMeetings();
-              checkIfNewUserJoined(listOfMeetings);
-              refreshUserCountMap(listOfMeetings);
+              await refreshMeetings();
             }
             widget.index = index;
-            print(listOfMeetings.length);
-            setState(() {
-
-            });
+            setState((){});
           },
           indicatorColor: colorlib.red,
           selectedIndex: widget.index,
@@ -859,12 +867,10 @@ class _HomeState extends State<Home> {
                                               onPressed:
                                                 item.inMeeting ? null : () async {
                                                   await MeetingDatabase().joinMeeting(item.meetingID);
-                                                  listOfMeetings = await MeetingDatabase().getListOfAllMeetings();
-                                                  checkIfNewUserJoined(listOfMeetings);
-                                                  refreshUserCountMap(listOfMeetings);
-                                                  NotificationHandler().showNotification("MensaMeet:", "Du bist einem Meetup beigetreten für den ${item.datum} um ${item.uhrzeit}.", flutterLocalNotificationsPlugin);
-                                                  setState(() {
-                                                  });
+                                                  await refreshMeetings();
+                                                  setState((){});
+
+                                                  NotificationHandler().showNotification("MensaMeet [Termin um ${item.time} am ${item.date}]:", "Du bist einem Meetup beigetreten.", flutterLocalNotificationsPlugin);
                                               },
                                               // style: ButtonStyle(elevation: MaterialStateProperty(12.0 )),
                                               style: ElevatedButton.styleFrom(
@@ -881,20 +887,16 @@ class _HomeState extends State<Home> {
                                     ),
                                     Column(
                                         mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            '${item.datum}',
+                                            '${item.date}',
                                             style: TextStyle(fontSize: 16.0),
                                           ),
                                           Text(
-                                            '${item.uhrzeit}',
+                                            '${item.time}',
                                             style: TextStyle(fontSize: 32.0),
-                                          ),
-                                          Text(
-                                            'Tisch: ${item.tisch}',
-                                            style: TextStyle(fontSize: 10.0),
                                           ),
                                         ]),
                                   ],
@@ -924,7 +926,7 @@ class _HomeState extends State<Home> {
                               child: Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(20, 0, 15, 0),
                                 child: Text(
-                                  'Nutzer: ${item.nutzer.length}',
+                                  'user: ${item.user.length}',
                                   style: TextStyle(fontSize: 20.0),
                                 ),
                               ),
@@ -935,15 +937,10 @@ class _HomeState extends State<Home> {
                                 onPressed:
                                   !item.inMeeting ? null : () async {
                                     await MeetingDatabase().leaveMeeting(item.meetingID);
-                                    listOfMeetings = await MeetingDatabase().getListOfAllMeetings();
-                                    checkIfNewUserJoined(listOfMeetings);
-                                    refreshUserCountMap(listOfMeetings);
-                                    NotificationHandler().showNotification("MensaMeet:", "Du hast ein Meetup verlassen.", flutterLocalNotificationsPlugin);
-                                    setState(() {
-
-                                    });
+                                    await refreshMeetings();
+                                    setState((){});
+                                    NotificationHandler().showNotification("MensaMeet [Termin um ${item.time} am ${item.date}]:", "Du hast ein Meetup verlassen.", flutterLocalNotificationsPlugin);
                                 },
-                                // style: ButtonStyle(elevation: MaterialStateProperty(12.0 )),
                                 style: ElevatedButton.styleFrom(
                                     minimumSize: Size(150, 40),
                                     elevation: 5.0,

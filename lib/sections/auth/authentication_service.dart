@@ -4,7 +4,7 @@ class AuthenticationService{
 
   FirebaseAuth authenticator = FirebaseAuth.instance;
 
-  //bypasses authentication and signs in anonymously
+  ///Bypasses authentication and signs in anonymously.
   Future signInWithoutCredentials() async {
     try{
       UserCredential userCredential = await authenticator.signInAnonymously();
@@ -15,7 +15,7 @@ class AuthenticationService{
     }
   }
 
-  //tries to login using the FirebaseAuth signInWithEmailAndPassword function using the given email and password
+  ///Tries to login using the FirebaseAuth signInWithEmailAndPassword function using the given email and password.
   Future loginWithCredentials(String email, String password) async {
     try {
       UserCredential userCredential = await authenticator.signInWithEmailAndPassword(email: email, password: password);
@@ -28,7 +28,7 @@ class AuthenticationService{
     return '';
   }
 
-  //tries to sign up using the FirebaseAuth createUserWithEmailAndPassword function using the given email and password
+  ///Tries to sign up using the FirebaseAuth createUserWithEmailAndPassword function using the given email and password.
   Future registerWithCredentials(String email, String password) async {
     try {
       UserCredential userCredential = await authenticator.createUserWithEmailAndPassword(email: email, password: password);
