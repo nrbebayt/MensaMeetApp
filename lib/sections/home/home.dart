@@ -895,7 +895,11 @@ class _HomeState extends State<Home> {
                                           ),
                                           Text(
                                             '${item.time}',
-                                            style: TextStyle(fontSize: 32.0),
+                                            style: TextStyle(fontSize: 28.0),
+                                          ),
+                                          Text(
+                                            'Tisch: ${item.table}',
+                                            style: TextStyle(fontSize: 10.0),
                                           ),
                                         ]),
                                   ],
